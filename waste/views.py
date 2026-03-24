@@ -2,6 +2,8 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from .models import WASTE_CATEGORY,COLLECTION_SCHEDULE,WASTE_REQUEST
 from .serializers import WasteCategorySerializer,CollectionScheduleSerializer,WasteRequestSerializer
+from django.core.mail import send_mail
+from twilio.rest import Client
 
 # Create your views here.
 
@@ -17,3 +19,22 @@ class CollectionScheduleViewSet(viewsets.ModelViewSet):
 class WasteRequestViewSet(viewsets.ModelViewSet):
     queryset = WASTE_REQUEST.objects.all()
     serializer_class = WasteRequestSerializer
+    
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        
+        send_mail(
+            'waste pickup request',
+            f'request created for {instance.category}'
+            'email@gmail.com',
+            [instance.user.email],
+            fail_silently=True,
+        )
+        def send_sms(message,phone):
+            client = Client('ACCOUNT_SID','AUTH_TOKEN')
+            
+            client.messages.create(
+                body=message,
+                from_ = '+914553258528'
+                to=phone
+            )
