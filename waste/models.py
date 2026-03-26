@@ -26,5 +26,13 @@ class WASTE_REQUEST(models.Model):
     preferred_date = models.DateField()
     status = models.CharField(max_length=20,default='pending')
     
+    collector = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True
+        blank=True
+        related_name='assigned_requests'
+    )
+    
     def __str__(self):
         return f'{self.user} - {self.category} - {self.status}'

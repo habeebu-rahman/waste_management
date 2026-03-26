@@ -20,6 +20,13 @@ class WasteRequestViewSet(viewsets.ModelViewSet):
     queryset = WASTE_REQUEST.objects.all()
     serializer_class = WasteRequestSerializer
     
+    def get_queryset(self):
+        user = self.request.user
+        
+        if user.role == 'collector':
+            return WASTE_REQUEST.objects.filter(collector=user)
+        return WASTE_REQUEST.objects.all()
+    
     def perform_create(self, serializer):
         instance = serializer.save()
         
