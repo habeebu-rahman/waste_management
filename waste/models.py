@@ -29,9 +29,9 @@ class WASTE_REQUEST(models.Model):
     collector = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
-        null=True
-        blank=True
-        related_name='assigned_requests'
+        null=True,
+        blank=True,
+        related_name='assigned_requests',
     )
     
     def __str__(self):

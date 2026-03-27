@@ -12,6 +12,10 @@ export function Login(){
         try{
             const res = await API.post('token/',form);
             localStorage.setItem('access_token',res.data.access);
+
+            const useRes = await API.get('auth/me')
+            localStorage.setItem('role',useRes.data.role)
+            
             alert('login success')
         }catch(err){
             console.log(err)

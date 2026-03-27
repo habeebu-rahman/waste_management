@@ -9,13 +9,28 @@ export function CollectorDashboard() {
         .then(res => setTasks(res.data));
     }, []);
 
+    const markCompleted = async(id)=>{
+        await API.patch(`waste/request/${id}/`,{
+            status:'completed'
+        })
+        window.location.reload()
+    }
+
     return (
-        <div>
-        <h2>My Tasks</h2>
+    <div className="p-5">
+        <h2 className="text-xl font-bold mb-4">Collector Dashboard</h2>
+
         {tasks.map(task => (
-            <div key={task.id}>
-            <p>{task.address}</p>
-            <p>Status: {task.status}</p>
+            <div key={task.id} className="border p-3 mb-2 rounded">
+            <p><b>Address:</b> {task.address}</p>
+            <p><b>Status:</b> {task.status}</p>
+
+            <button
+                onClick={() => markCompleted(task.id)}
+                className="bg-green-500 text-white px-3 py-1 mt-2 rounded"
+            >
+                Mark Completed
+            </button>
             </div>
         ))}
         </div>

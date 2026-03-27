@@ -14,6 +14,13 @@ export function AdminDashboard(){
         window.location.reload();
     }
 
+    const assignCollector = async (id, collectorId) => {
+    await API.patch(`waste/requests/${id}/`, {
+        collector: collectorId,
+        status: "assigned",
+    });
+    };
+
     return(
         <>
             <h2>Admin Dashboard</h2>
@@ -22,6 +29,13 @@ export function AdminDashboard(){
                     <p>{req.category} - {req.status}</p>
                     <button onClick={()=> updateStatus(req.id,'approved')}>Approve</button>
                     <button onClick={()=> updateStatus(req.id,'rejected')}>Reject</button>
+
+                <button
+                    onClick={() => assignCollector(req.id)}
+                    className="bg-green-500 text-white px-3 py-1 mt-2 rounded"
+                >
+                    Mark assigned
+                </button>
                 </div>
             ))}
         </>

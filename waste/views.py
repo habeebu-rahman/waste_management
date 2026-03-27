@@ -42,6 +42,6 @@ class WasteRequestViewSet(viewsets.ModelViewSet):
             
             client.messages.create(
                 body=message,
-                from_ = '+914553258528'
-                to=phone
+                from_ = '+914553258528',
+                to=phone,
             )
