@@ -1,14 +1,18 @@
 import { Link,useNavigate } from "react-router-dom";
+import { tokenize } from './../../node_modules/espree/espree';
 
 export function Navbar(){
     const navigate = useNavigate()
 
+    const token = localStorage.getItem
     const role = localStorage.getItem('role')
 
     const logout = ()=>{
         localStorage.clear()
         navigate('/login')
     }
+
+    if (!token) return null;
 
     return(
         <div className="bg-gray-900 text-white px-6 py-3 flex justify-between items-center shadow-lg">

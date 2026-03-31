@@ -4,6 +4,7 @@ from .models import WASTE_CATEGORY,COLLECTION_SCHEDULE,WASTE_REQUEST
 from .serializers import WasteCategorySerializer,CollectionScheduleSerializer,WasteRequestSerializer
 from django.core.mail import send_mail
 from twilio.rest import Client
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 
@@ -19,6 +20,8 @@ class CollectionScheduleViewSet(viewsets.ModelViewSet):
 class WasteRequestViewSet(viewsets.ModelViewSet):
     queryset = WASTE_REQUEST.objects.all()
     serializer_class = WasteRequestSerializer
+    
+    permission_classes=[IsAuthenticated]
     
     def get_queryset(self):
         user = self.request.user

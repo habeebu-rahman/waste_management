@@ -13,10 +13,26 @@ export default function App(){
     <BrowserRouter>
     <Navbar />
       <Routes>
-        <Route path='/' element={<Dashboard />} />
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />
-        <Route path='/request' element={<RequestPickup />} />
+
+        <Route 
+          path='/' 
+          element={
+            <ProtectedRoute >
+              <Dashboard />
+            </ProtectedRoute>
+          } 
+        />
+
+        <Route 
+          path='/request' 
+          element={
+            <ProtectedRoute roleRequired = 'citizen'>
+              <RequestPickup />
+            </ProtectedRoute>
+          } 
+        />
 
         <Route 
           path='/admin' 
@@ -24,14 +40,16 @@ export default function App(){
             <ProtectedRoute roleRequired = 'admin'>
               <AdminDashboard />
             </ProtectedRoute>
-            } />
+          } 
+        />
         <Route 
           path='/collector' 
           element={
             <ProtectedRoute roleRequired = 'collector'>
               <CollectorDashboard />
             </ProtectedRoute>
-            } />
+          } 
+        />
       </Routes>
     </BrowserRouter>
   )
