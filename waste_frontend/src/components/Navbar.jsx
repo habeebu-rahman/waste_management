@@ -1,5 +1,4 @@
 import { Link,useNavigate } from "react-router-dom";
-import { tokenize } from './../../node_modules/espree/espree';
 
 export function Navbar(){
     const navigate = useNavigate()
@@ -19,18 +18,23 @@ export function Navbar(){
             <h1 className="text-xl font-bold">Waste System</h1>
 
             <div className="flex gap-4">
-                <Link to="/">Home</Link>
+                <Link to="/">Home |</Link>
+                <Link to="/login">login |</Link>
+                <Link to="/register">Register |</Link>
 
                 {role === "citizen" && (
-                <Link to="/request">Request Pickup</Link>
+                <>
+                <Link to="/request">Request Pickup |</Link>
+                <Link to="/complaint">complaint Register |</Link>
+                </>
                 )}
 
                 {role === "admin" && (
-                <Link to="/admin">Admin Dashboard</Link>
+                <Link to="/admin">Admin Dashboard |</Link>
                 )}
 
                 {role === "collector" && (
-                <Link to="/collector">Collector Dashboard</Link>
+                <Link to="/collector">Collector Dashboard |</Link>
                 )}
 
                 <button

@@ -31,8 +31,32 @@ class WASTE_REQUEST(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='assigned_requests',
+        related_name='assigned_complaint',
     )
     
+    def __str__(self):
+        return f'{self.user} - {self.category} - {self.status}'
+    
+class WASTE_COMPLAINT(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    # category = models.ForeignKey(WASTE_CATEGORY, on_delete=models.CASCADE)
+
+    place = models.TextField()
+
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
+
+    image = models.ImageField(upload_to='complaints/', null=True, blank=True)
+
+    status = models.CharField(max_length=20, default='pending')
+
+    collector = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='assigned_requests',
+    )
+
     def __str__(self):
         return f'{self.user} - {self.category} - {self.status}'

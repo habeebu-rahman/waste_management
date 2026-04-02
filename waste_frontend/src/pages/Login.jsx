@@ -16,22 +16,33 @@ export function Login(){
             const res = await API.post('token/',form);
             localStorage.setItem('access_token',res.data.access);
 
-            const useRes = await API.get('auth/me')
-            localStorage.setItem('role',useRes.data.role)
+            const userRes = await API.get('auth/me')
+            const role = userRes.data.role;
+
+            localStorage.setItem('role',role)
 
             alert('login success')
+
+            if (role === 'admin'){
+                navigate('/admin');
+                return;
+            }else if(role === 'collector'){
+                navigate('/collector')
+                return;
+            }else if(role === 'citizen'){
+                navigate('/')
+                return;
+            }
+            else{
+                navigate('/')
+                return;
+            }
         }catch(err){
             console.log(err)
         }
     }
 
-    if (userRes.data.role === 'admin'){
-        navigate('/admin');
-    }else if(userRes.data.role === 'collector'){
-        navigate('/collector')
-    }else{
-        navigate('/')
-    }
+    
 
     return(
         <form onSubmit={handleLogin}>

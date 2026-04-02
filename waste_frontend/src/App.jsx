@@ -7,6 +7,7 @@ import { Navbar } from './components/Navbar'
 import { AdminDashboard } from './pages/AdminDashboard'
 import { CollectorDashboard } from './pages/CollectorDashboard'
 import { ProtectedRoute } from './pages/ProtectedRoute'
+import { ComplaintRegister } from './pages/ComplaintRegister'
 
 export default function App(){
   return(
@@ -30,6 +31,14 @@ export default function App(){
           element={
             <ProtectedRoute roleRequired = 'citizen'>
               <RequestPickup />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path='/complaint' 
+          element={
+            <ProtectedRoute roleRequired = 'citizen'>
+              <ComplaintRegister />
             </ProtectedRoute>
           } 
         />

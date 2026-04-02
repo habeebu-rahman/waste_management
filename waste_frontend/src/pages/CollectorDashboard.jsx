@@ -10,7 +10,7 @@ export function CollectorDashboard() {
     }, []);
 
     const markCompleted = async(id)=>{
-        await API.patch(`waste/request/${id}/`,{
+        await API.patch(`waste/requests/${id}/`,{
             status:'completed'
         })
         window.location.reload()

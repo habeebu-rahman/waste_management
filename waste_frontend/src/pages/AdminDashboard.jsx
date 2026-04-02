@@ -5,12 +5,12 @@ export function AdminDashboard(){
     const [request,setRequest] = useState([])
 
     useEffect(()=>{
-        API.get('waste/request/')
+        API.get('waste/requests/')
             .then(res=>setRequest(res.data))
     },[]);
 
     const updateStatus = async(id, status)=>{
-        await API.patch(`waste/request/${id}`,{status});
+        await API.patch(`waste/requests/${id}`,{status});
         window.location.reload();
     }
 

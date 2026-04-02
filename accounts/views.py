@@ -4,7 +4,7 @@ from .models import USER
 from .serializers import RegisterSerializer
 
 from rest_framework.views import APIView
-from rest_framework.response import responses
+from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
@@ -19,5 +19,5 @@ class MeView(APIView):
     def get(self,request):
         return Response({
             'username':request.user.username,
-            'role':request.user.role,
+            'role': request.user.role,
         })
