@@ -8,9 +8,14 @@ export function RequestPickup(){
     const [categories,setCategories] = useState([])
     const[formRequest,setFormRequest] = useState({
         category : '',
-        address : '',
         preferred_date : ''
     })
+
+    const getMinDate = () => {
+        const dt = new Date();
+        dt.setDate(dt.getDate() + 2); // Add 2 days
+        return dt.toISOString().split('T')[0]; // Format as 2024-05-22
+    };
 
     useEffect(()=>{
         API.get('waste/categories/')
@@ -29,16 +34,16 @@ export function RequestPickup(){
 
     // complaint
 
-    const [location,setLocation] = useState({ lat: 11.2588, lng: 75.7804 })
+    // const [location,setLocation] = useState({ lat: 11.2588, lng: 75.7804 })
     const [formComplaint,setFormComplaint] = useState({place:'',image:null,category:''})
     const API_KEY = import.meta.env.VITE_GOOGLE_MAP_API_KEY;
 
-    const handleMapClick = (e)=>{
-        const lat = e.latLng.lat()
-        const lng = e.latLng.lng()
+    // const handleMapClick = (e)=>{
+    //     const lat = e.latLng.lat()
+    //     const lng = e.latLng.lng()
 
-        setLocation({ lat,lng })
-    }
+    //     setLocation({ lat,lng })
+    // }
 
     const handleImageChange = (e)=>{
         setFormComplaint({...formComplaint, image:e.target.files[0]})
@@ -76,7 +81,7 @@ export function RequestPickup(){
             </select>
 
             {/* <input type="text" placeholder="Address" onChange={(e)=>setFormRequest({...formRequest,address:e.target.value})} /> */}
-            <input type="date"  onChange={(e)=>setFormRequest({...formRequest,preferred_date:e.target.value})} />
+            <input type="date" min={getMinDate()}  onChange={(e)=>setFormRequest({...formRequest,preferred_date:e.target.value})} />
             <button>Request Pickup</button>
         </form>
         
@@ -100,13 +105,13 @@ export function RequestPickup(){
                 ))}
             </select>
 
-            <LoadScript googleMapsApiKey= {API_KEY}>
+            {/* <LoadScript googleMapsApiKey= {API_KEY}>
             <GoogleMap center={location} zoom={12}
                 mapContainerStyle={{ height:'400px' }} onClick={handleMapClick}
             >
                 <Marker position={location} />
             </GoogleMap>
-            </LoadScript>
+            </LoadScript> */}
 
             <button>Submit Complaint</button>
         </form>

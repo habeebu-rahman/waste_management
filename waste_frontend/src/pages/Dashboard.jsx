@@ -10,6 +10,13 @@ export function Dashboard(){
             .catch(err=>console.log(err))
     },[]);
 
+    const [request,setRequest] = useState([])
+
+    useEffect(()=>{
+        API.get(`waste/requests/`)
+            .then(res=>setRequest(res.data))
+    },[]);
+
     return(
         <>
             <h2>Collection Schedules</h2>
@@ -18,6 +25,23 @@ export function Dashboard(){
                     <p>{item.category} - {item.data}</p>
                 </div>
             ))}
+
+            
+            <div>
+                <h2>Request sended</h2>
+            {request.map(req=>(
+                <div key={req.id}>
+                    <p>
+                        <strong> Category:</strong> {req.category_name} | 
+                        <strong> Status:</strong> {req.status}
+                    </p>
+                    <p>
+                        <strong>preferred_date:</strong> {req.preferred_date} |
+                        <strong> Address:</strong> {req.address}
+                    </p><hr />
+                </div>
+            ))}
+            </div>
         </>
     )
 }

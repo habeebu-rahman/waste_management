@@ -21,3 +21,11 @@ class MeView(APIView):
             'username':request.user.username,
             'role': request.user.role,
         })
+
+class UserListView(generics.ListAPIView):
+    serializer_class = RegisterSerializer # Or a simpler UserSerializer if you have one
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        # We only want users where the role is 'collector'
+        return USER.objects.filter(role='collector')

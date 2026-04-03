@@ -8,6 +8,7 @@ export function Register() {
         username: '',
         password: '',
         email: '',
+        phone:'',
         district: '',
         panchayath: '',
         ward: '',
@@ -69,6 +70,10 @@ export function Register() {
 
             <input placeholder="Email"
                 onChange={(e)=> setForm({...form,email:e.target.value})}
+            />
+
+            <input placeholder="phoneno"
+                onChange={(e)=> setForm({...form,phone:e.target.value})}
             />
 
             <input type="password" placeholder="Password"

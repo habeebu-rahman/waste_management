@@ -31,7 +31,7 @@ class WASTE_REQUEST(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='assigned_complaint',
+        related_name='assigned_request',
     )
     
     def __str__(self):
@@ -55,7 +55,7 @@ class WASTE_COMPLAINT(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='assigned_requests',
+        related_name='assigned_complaint',
     )
 
     def __str__(self):

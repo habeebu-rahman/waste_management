@@ -18,19 +18,27 @@ class CollectionScheduleViewSet(viewsets.ModelViewSet):
     serializer_class = CollectionScheduleSerializer
     
 class WasteRequestViewSet(viewsets.ModelViewSet):
-    queryset = WASTE_REQUEST.objects.all()
+    # We use select_related to optimize the database query for category/user names
+    queryset = WASTE_REQUEST.objects.select_related('user', 'category').all()
     serializer_class = WasteRequestSerializer
-    
-    permission_classes=[IsAuthenticated]
-    
+    permission_classes = [IsAuthenticated]
+
     def get_queryset(self):
         user = self.request.user
-        
+
+        # 1. Admins see EVERYTHING
+        if user.role == 'admin' or user.is_staff:
+            return WASTE_REQUEST.objects.all()
+
+        # 2. Collectors see only what is assigned to them
         if user.role == 'collector':
             return WASTE_REQUEST.objects.filter(collector=user)
-        return WASTE_REQUEST.objects.all()
-    
+
+        # 3. Regular Users see only the requests THEY created
+        return WASTE_REQUEST.objects.filter(user=user)
+
     def perform_create(self, serializer):
+        # Automatically link the request to the logged-in user
         serializer.save(user=self.request.user)
         
         # send_mail(
