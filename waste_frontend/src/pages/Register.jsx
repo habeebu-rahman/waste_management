@@ -1,5 +1,6 @@
 import { useState } from "react";
 import data from "../api/kerala.json";
+import API from "../api/api";
 
 export function Register() {
 
@@ -18,38 +19,44 @@ export function Register() {
 
     // Handle District Change
     const handleDistrictChange = (e) => {
-        const selectedDistrict = e.target.value;
+        const districtId = e.target.value;
+        const foundDistrict = data.find(d => d.id == districtId);
 
         setForm({
             ...form,
-            district: selectedDistrict,
+            district: Number(districtId),
             panchayath: '',
             ward: ''
         });
 
-        const foundDistrict = data.find(d => d.district === selectedDistrict);
 
-        setPanchayaths(foundDistrict ? foundDistrict.panchayaths : []);
+        setPanchayaths(foundDistrict?.panchayaths || []);
         setWards([]);
     };
 
     // Handle Panchayath Change
     const handlePanchayathChange = (e) => {
-        const selectedPanchayath = e.target.value;
+        const panchayathId = e.target.value;
+        const found = panchayaths.find(p => p.id == panchayathId);
 
         setForm({
             ...form,
-            panchayath: selectedPanchayath,
+            panchayath: Number(panchayathId),
             ward: ''
         });
 
-        const found = panchayaths.find(p => p.name === selectedPanchayath);
-
-        setWards(found ? found.wards : []);
+        setWards(found?.wards || []);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault();
+
+        try {
+            await API.post("auth/register/", form);
+            alert("Registration successful");
+        } catch (err) {
+            console.log(err.response?.data);
+        }
         console.log(form);
     };
 
@@ -71,8 +78,8 @@ export function Register() {
             {/* District */}
             <select onChange={handleDistrictChange}>
                 <option value="">Select District</option>
-                {data.map((d, index) => (
-                    <option key={index} value={d.district}>
+                {data.map((d) => (
+                    <option key={d.id} value={d.id}>
                         {d.district}
                     </option>
                 ))}
@@ -81,19 +88,19 @@ export function Register() {
             {/* Panchayath */}
             <select onChange={handlePanchayathChange} disabled={!form.district}>
                 <option value="">Select Panchayath</option>
-                {panchayaths.map((p, index) => (
-                    <option key={index} value={p.name}>
+                {panchayaths.map((p) => (
+                    <option key={p.id} value={p.id}>
                         {p.name}
                     </option>
                 ))}
             </select>
 
             {/* Ward */}
-            <select onChange={(e)=> setForm({...form, ward:e.target.value})} disabled={!form.panchayath}>
+            <select onChange={(e)=> setForm({...form, ward:Number(e.target.value)})} disabled={!form.panchayath}>
                 <option value="">Select Ward</option>
-                {wards.map((w, index) => (
-                    <option key={index} value={w}>
-                        Ward {w}
+                {wards.map((w) => (
+                    <option key={w.id} value={w.id}>
+                        Ward {w.number}
                     </option>
                 ))}
             </select>

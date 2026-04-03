@@ -15,8 +15,10 @@ class WasteRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = WASTE_REQUEST
         fields = '__all__'
+        read_only_fields = ['user']
         
 class WasteComplaintSerializer(serializers.ModelSerializer):
     class Meta:
         model = WASTE_COMPLAINT
         fields = '__all__'
+        read_only_fields = ['user']

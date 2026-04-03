@@ -19,13 +19,18 @@ export function Navbar(){
 
             <div className="flex gap-4">
                 <Link to="/">Home |</Link>
+                {!role && 
+                <>
                 <Link to="/login">login |</Link>
                 <Link to="/register">Register |</Link>
+                </>
+                }
+                
 
                 {role === "citizen" && (
                 <>
-                <Link to="/request">Request Pickup |</Link>
-                <Link to="/complaint">complaint Register |</Link>
+                <Link to="/request">Request/complaint |</Link>
+                {/* <Link to="/complaint">complaint Register |</Link> */}
                 </>
                 )}
 

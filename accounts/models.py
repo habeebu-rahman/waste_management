@@ -20,18 +20,13 @@ class Panchayath(models.Model):
 
 
 class Ward(models.Model):
-    number = models.IntegerField()
+    number = models.CharField()
     panchayath = models.ForeignKey(Panchayath, on_delete=models.CASCADE, related_name="wards")
 
     def __str__(self):
         return f"Ward {self.number}"
     
-class HouseNo(models.Model):
-    number = models.CharField(max_length=10)
-    ward = models.ForeignKey(Ward, on_delete=models.CASCADE, related_name="houseNo")
 
-    def __str__(self):
-        return f"Ward {self.number}"
 
 class USER(AbstractUser):
     ROLE_CHOICES = (
@@ -47,7 +42,7 @@ class USER(AbstractUser):
     district = models.ForeignKey(District, on_delete=models.SET_NULL, null=True, blank=True)
     panchayath = models.ForeignKey(Panchayath, on_delete=models.SET_NULL, null=True, blank=True)
     ward = models.ForeignKey(Ward, on_delete=models.SET_NULL, null=True, blank=True)
-    houseNo = models.ForeignKey(HouseNo, on_delete=models.SET_NULL, null=True, blank=True)
+    houseNo = models.CharField(max_length=10)
     
     def __str__(self):
         return self.username

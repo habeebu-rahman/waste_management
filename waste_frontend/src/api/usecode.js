@@ -1,4 +1,7 @@
-[
+from your_app_name.models import District, Panchayath, Ward
+
+# This is your exact JSON data
+data = [
     {
         "id":"01",
         "district": "trivandrum",
@@ -572,3 +575,15 @@
     }
 
 ]
+
+
+
+# Loop through and create matching database records
+for d in data:
+    dist, _ = District.objects.get_or_create(id=int(d["id"]), defaults={"name": d["district"]})
+    for p in d["panchayaths"]:
+        panch, _ = Panchayath.objects.get_or_create(id=int(p["id"]), defaults={"name": p["name"], "district": dist})
+        for w in p["wards"]:
+            Ward.objects.get_or_create(id=int(w["id"]), defaults={"number": w["number"], "panchayath": panch})
+
+print("Database synced with JSON successfully!")

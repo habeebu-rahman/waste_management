@@ -31,23 +31,23 @@ class WasteRequestViewSet(viewsets.ModelViewSet):
         return WASTE_REQUEST.objects.all()
     
     def perform_create(self, serializer):
-        instance = serializer.save()
+        serializer.save(user=self.request.user)
         
-        send_mail(
-            'waste pickup request',
-            f'request created for {instance.category}'
-            'email@gmail.com',
-            [instance.user.email],
-            fail_silently=True,
-        )
-        def send_sms(message,phone):
-            client = Client('ACCOUNT_SID','AUTH_TOKEN')
+        # send_mail(
+        #     'waste pickup request',
+        #     f'request created for {instance.category}'
+        #     'email@gmail.com',
+        #     [instance.user.email],
+        #     fail_silently=True,
+        # )
+        # def send_sms(message,phone):
+        #     client = Client('ACCOUNT_SID','AUTH_TOKEN')
             
-            client.messages.create(
-                body=message,
-                from_ = '+914553258528',
-                to=phone,
-            )
+        #     client.messages.create(
+        #         body=message,
+        #         from_ = '+914553258528',
+        #         to=phone,
+        #     )
             
 class WasteComplaintViewSet(viewsets.ModelViewSet):
     queryset = WASTE_COMPLAINT.objects.all()
@@ -63,20 +63,20 @@ class WasteComplaintViewSet(viewsets.ModelViewSet):
         return WASTE_COMPLAINT.objects.all()
     
     def perform_create(self, serializer):
-        instance = serializer.save()
+        serializer.save(user=self.request.user)
         
-        send_mail(
-            'waste pickup request',
-            f'request created for {instance.category}'
-            'email@gmail.com',
-            [instance.user.email],
-            fail_silently=True,
-        )
-        def send_sms(message,phone):
-            client = Client('ACCOUNT_SID','AUTH_TOKEN')
+        # send_mail(
+        #     'waste pickup request',
+        #     f'request created for {instance.category}'
+        #     'email@gmail.com',
+        #     [instance.user.email],
+        #     fail_silently=True,
+        # )
+        # def send_sms(message,phone):
+        #     client = Client('ACCOUNT_SID','AUTH_TOKEN')
             
-            client.messages.create(
-                body=message,
-                from_ = '+914553258528',
-                to=phone,
-            )
+        #     client.messages.create(
+        #         body=message,
+        #         from_ = '+914553258528',
+        #         to=phone,
+        #     )

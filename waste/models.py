@@ -39,7 +39,7 @@ class WASTE_REQUEST(models.Model):
     
 class WASTE_COMPLAINT(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    # category = models.ForeignKey(WASTE_CATEGORY, on_delete=models.CASCADE)
+    category = models.ForeignKey(WASTE_CATEGORY, on_delete=models.CASCADE)
 
     place = models.TextField()
 
