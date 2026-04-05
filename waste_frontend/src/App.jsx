@@ -3,7 +3,7 @@ import { Register } from './pages/Register'
 import { Login } from './pages/Login'
 import { Dashboard } from './pages/Dashboard'
 import { RequestPickup } from './pages/RequestPickup'
-import { Navbar } from './components/Navbar'
+import { AppNavbar } from './components/Navbar'
 import { AdminDashboard } from './pages/AdminDashboard'
 import { CollectorDashboard } from './pages/CollectorDashboard'
 import { ProtectedRoute } from './pages/ProtectedRoute'
@@ -12,7 +12,7 @@ import { ComplaintRegister } from './pages/ComplaintRegister'
 export default function App(){
   return(
     <BrowserRouter>
-    <Navbar />
+    <AppNavbar />
       <Routes>
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />

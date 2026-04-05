@@ -1,54 +1,91 @@
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
-export function Navbar(){
-    const navigate = useNavigate()
+export function AppNavbar() {
+    const navigate = useNavigate();
+    const [isOpen, setIsOpen] = useState(false);
 
-    const token = localStorage.getItem
-    const role = localStorage.getItem('role')
+    // const token = localStorage.getItem('token'); 
+    const role = localStorage.getItem('role');
 
-    const logout = ()=>{
-        localStorage.clear()
-        navigate('/login')
-    }
+    const logout = () => {
+        localStorage.clear();
+        navigate('/login');
+    };
 
-    if (!token) return null;
-
-    return(
-        <div className="bg-gray-900 text-white px-6 py-3 flex justify-between items-center shadow-lg">
-            <h1 className="text-xl font-bold">Waste System</h1>
-
-            <div className="flex gap-4">
-                <Link to="/">Home |</Link>
-                {!role && 
-                <>
-                <Link to="/login">login |</Link>
-                <Link to="/register">Register |</Link>
-                </>
-                }
+    return (
+        <nav className="bg-[#0f172a] border-b border-slate-800 px-6 py-4 shadow-2xl">
+            <div className="max-w-7xl mx-auto flex justify-between items-center">
                 
+                {/* 1. BRAND - No underline, custom colors */}
+                <Link to="/" className="flex items-center gap-2 !no-underline group">
+                    <div className="bg-green-500 p-1.5 rounded-lg shadow-lg group-hover:rotate-12 transition-transform">
+                        <span className="text-xl">♻️</span>
+                    </div>
+                    <span className="text-2xl font-black tracking-tighter text-white">
+                        KL<span className="text-green-500">eeno</span>
+                    </span>
+                </Link>
 
-                {role === "citizen" && (
-                <>
-                <Link to="/request">Request/complaint |</Link>
-                {/* <Link to="/complaint">complaint Register |</Link> */}
-                </>
-                )}
+                {/* 2. DESKTOP MENU - Clean spacing, no underlines */}
+                <div className="hidden md:flex items-center gap-8">
+                    <Link to="/" className="!text-slate-300 hover:!text-white font-medium !no-underline transition-all hover:-translate-y-0.5">
+                        Home
+                    </Link>
+                    
+                    {!role ? (
+                        <div className="flex items-center gap-4">
+                            <Link to="/login" className="!text-slate-300 hover:!text-green-500 !no-underline font-medium px-4 py-2 rounded-lg hover:bg-slate-800 transition-colors">
+                                Login
+                            </Link>
+                            <Link to="/register" className="bg-green-600 hover:!bg-green-500 text-white !no-underline font-bold px-6 py-2 rounded-full shadow-lg transition-all active:scale-95">
+                                Register
+                            </Link>
+                        </div>
+                    ) : (
+                        <div className="flex items-center gap-6">
+                            {role === "citizen" && <Link to="/request" className="!text-green-400 hover:!text-green-500 !no-underline font-medium">Report Issue</Link>}
+                            {role === "admin" && <Link to="/admin" className="text-blue-400 hover:text-blue-300 font-bold !no-underline">Admin Panel</Link>}
+                            {role === "collector" && <Link to="/collector" className="text-amber-400 hover:text-amber-300 font-bold !no-underline">Collector Portal</Link>}
+                            
+                            <button 
+                                onClick={logout}
+                                className="bg-blue-900 hover:bg-blue-800 text-white px-3 py-2 !rounded-lg font-bold !text-xs uppercase tracking-widest shadow-lg transition-all active:scale-95"
+                            >
+                                Logout
+                            </button>
+                        </div>
+                    )}
+                </div>
 
-                {role === "admin" && (
-                <Link to="/admin">Admin Dashboard |</Link>
-                )}
-
-                {role === "collector" && (
-                <Link to="/collector">Collector Dashboard |</Link>
-                )}
-
-                <button
-                onClick={logout}
-                className="bg-red-500 px-3 py-1 rounded"
+                {/* 3. MOBILE TOGGLE */}
+                <button 
+                    className="md:hidden text-slate-300 hover:text-white p-2"
+                    onClick={() => setIsOpen(!isOpen)}
                 >
-                Logout
+                    <span className="text-2xl">{isOpen ? '✕' : '☰'}</span>
                 </button>
             </div>
-        </div>
-    )
+
+            {/* 4. MOBILE MENU */}
+            {isOpen && (
+                <div className="md:hidden mt-4 flex flex-col gap-2 animate-in fade-in slide-in-from-top-4">
+                    <Link to="/" className="!text-slate-300 hover:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline" onClick={() => setIsOpen(false)}>Home</Link>
+                    {role ? (
+                        <>
+                        {role === "citizen" && <Link to="/request" className="!text-slate-300 hover:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline">Report Issue</Link>}
+                        {role === "admin" && <Link to="/admin" className="!text-slate-300 hover:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline">Admin Panel</Link>}
+                        {role === "collector" && <Link to="/collector" className="!text-slate-300 hover:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline">Collector Portal</Link>}
+                        <button onClick={logout} className="bg-rose-600 text-white p-3 rounded-lg w-full font-bold mt-2">Logout</button>
+                        </>
+                    ) : (
+                        <>
+                            <Link to="/login" className="!text-slate-300 hover:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline" onClick={() => setIsOpen(false)}>Login</Link>
+                            <Link to="/register" className="bg-green-600 hover:!bg-green-500 text-white py-3 px-4 rounded-lg text-center font-bold !no-underline mt-2" onClick={() => setIsOpen(false)}>Register</Link>
+                        </>
+                    )}
+                </div>
+            )}
+        </nav>
+    );
 }

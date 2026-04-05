@@ -62,3 +62,8 @@ class USER(AbstractUser):
     
     def __str__(self):
         return self.username
+    
+class OTPVerification(models.Model):
+    identifier = models.CharField(max_length=255,unique=True)
+    otp_code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now=True)
