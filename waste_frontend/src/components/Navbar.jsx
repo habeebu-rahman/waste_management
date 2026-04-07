@@ -44,9 +44,14 @@ export function AppNavbar() {
                         </div>
                     ) : (
                         <div className="flex items-center gap-6">
-                            {role === "citizen" && <Link to="/request" className="!text-green-400 hover:!text-green-500 !no-underline font-medium">Report Issue</Link>}
-                            {role === "admin" && <Link to="/admin" className="text-blue-400 hover:text-blue-300 font-bold !no-underline">Admin Panel</Link>}
-                            {role === "collector" && <Link to="/collector" className="text-amber-400 hover:text-amber-300 font-bold !no-underline">Collector Portal</Link>}
+                            {role === "citizen" && 
+                            <>
+                                <Link to="/request" className="!text-slate-300 hover:!text-green-500 !no-underline font-medium">Report Issue</Link>
+                                <Link to="/complaint" className="!text-slate-300 hover:!text-green-500 !no-underline font-medium">complaint Issue</Link>
+                            </>
+                            }
+                            {role === "admin" && <Link to="/admin" className="!text-slate-300 hover:!text-green-500 font-bold !no-underline">Admin Panel</Link>}
+                            {role === "collector" && <Link to="/collector" className="!text-slate-300 hover:!text-green-500 font-bold !no-underline">Collector Portal</Link>}
                             
                             <button 
                                 onClick={logout}

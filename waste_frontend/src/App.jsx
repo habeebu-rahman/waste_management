@@ -34,14 +34,14 @@ export default function App(){
             </ProtectedRoute>
           } 
         />
-        {/* <Route 
+        <Route 
           path='/complaint' 
           element={
             <ProtectedRoute roleRequired = 'citizen'>
               <ComplaintRegister />
             </ProtectedRoute>
           } 
-        /> */}
+        />
 
         <Route 
           path='/admin' 

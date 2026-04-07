@@ -65,10 +65,17 @@ class WasteComplaintViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         user = self.request.user
-        
+
+        # 1. Admins see EVERYTHING
+        if user.role == 'admin' or user.is_staff:
+            return WASTE_COMPLAINT.objects.all()
+
+        # 2. Collectors see only what is assigned to them
         if user.role == 'collector':
             return WASTE_COMPLAINT.objects.filter(collector=user)
-        return WASTE_COMPLAINT.objects.all()
+
+        # 3. Regular Users see only the requests THEY created
+        return WASTE_COMPLAINT.objects.filter(user=user)
     
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

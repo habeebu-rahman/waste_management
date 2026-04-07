@@ -1,12 +1,18 @@
-import { useState } from "react";
-import data from "../api/kerala.json";
+import { useState} from "react";
+import keralaData from "../api/kerala.json";
 import API from "../api/api";
+import { useNavigate } from "react-router-dom";
 
 export function Register() {
     const [form, setForm] = useState({
         username: '', password: '', email: '', phone: '',
         district: '', panchayath: '', ward: '', houseNo: '',
     });
+
+    const navigate = useNavigate()
+
+    const [errors, setErrors] = useState({}); // Stores errors for EVERY field
+    const [loading, setLoading] = useState(false);
 
     // Verification States
     const [emailOtp, setEmailOtp] = useState("");
@@ -15,145 +21,238 @@ export function Register() {
     const [isPhoneVerified, setIsPhoneVerified] = useState(false);
     const [emailOtpSent, setEmailOtpSent] = useState(false);
     const [phoneOtpSent, setPhoneOtpSent] = useState(false);
+    const [emailOtpInvalid, setEmailOtpInvalid] = useState(false);
+    const [phoneOtpInvalid, setPhoneOtpInvalid] = useState(false);
 
     const [panchayaths, setPanchayaths] = useState([]);
     const [wards, setWards] = useState([]);
 
-    // --- OTP Handlers ---
+    // --- 1. Enhanced Validation Logic ---
+    const validate = () => {
+        let e = {};
+        if (!form.username.trim()) e.username = "Username is required";
+        if (form.username.length < 3) e.username = "Username must be at least 3 characters";
+        
+        if (!form.password) e.password = "Password is required";
+        else if (form.password.length < 8) e.password = "Password must be at least 8 characters";
+
+        if (!form.email) e.email = "Email is required";
+        else if (!/^\S+@\S+\.\S+$/.test(form.email)) e.email = "Invalid email format";
+
+        if (!form.phone) e.phone = "Phone number is required";
+        else if (!/^\d{10}$/.test(form.phone)) e.phone = "Enter a valid 10-digit mobile number";
+
+        if (!form.district) e.district = "Please select a district";
+        if (!form.panchayath) e.panchayath = "Please select a panchayath";
+        if (!form.ward) e.ward = "Please select a ward";
+        if (!form.houseNo.trim()) e.houseNo = "House number/name is required";
+
+        setErrors(e);
+        return Object.keys(e).length === 0;
+    };
+
+    // --- 2. OTP & API Handlers ---
     const sendOtp = async (type, value) => {
-        console.log(`Sending OTP for ${type}. Value is:`, value);
-        if (!value) return alert(`Please enter ${type} first`);
+        if (!value) {
+            setErrors(prev => ({ ...prev, [type]: `Enter ${type} to receive OTP` }));
+            return;
+        }
         try {
             await API.post("auth/send-otp/", { type, value });
             type === 'email' ? setEmailOtpSent(true) : setPhoneOtpSent(true);
-            alert(`OTP sent to your ${type}`);
-        } catch (err) { console.log(`Failed to send OTP ${err}`); }
-    };
-
-    const verifyOtp = async (type, otp) => {
-        try {
-            // Get the actual email or phone string from the form state
-            const value = type === 'email' ? form.email : form.phone;
-
-            // Send 'value' along with the otp
-            const res = await API.post("auth/verify-otp/", { type, otp, value });
-            
-            if (res.data.status === 'verified') {
-                type === 'email' ? setIsEmailVerified(true) : setIsPhoneVerified(true);
-                alert(`${type} verified successfully!`);
-            }
         } catch (err) {
-            console.error("Verification Error:", err.response?.data);
-            alert("Invalid OTP");
+            setErrors(prev => ({ ...prev, [type]: "Failed to send OTP. Try again." }));
+            console.log(err)
         }
     };
 
-    // --- Existing Handlers ---
-    const handleDistrictChange = (e) => {
-        const districtId = e.target.value;
-        const foundDistrict = data.find(d => d.id == districtId);
-        setForm({ ...form, district: Number(districtId), panchayath: '', ward: '' });
-        setPanchayaths(foundDistrict?.panchayaths || []);
-        setWards([]);
+
+    const verifyOtp = async (type, otp) => {
+        const value = type === 'email' ? form.email : form.phone;
+        try {
+            const res = await API.post("auth/verify-otp/", { type, otp, value });
+            if (res.data.status === 'verified') {
+                type === 'email' ? setIsEmailVerified(true) : setIsPhoneVerified(true);
+                type === 'email' ? setEmailOtpInvalid(false) : setPhoneOtpInvalid(false);
+                setErrors(prev => ({ ...prev, [type]: "" })); // Clear error on success
+            }
+        } catch (err) {
+            setErrors(prev => ({ ...prev, [type]: "Invalid OTP code" }));
+            console.log(err)
+            type === 'email' ? setEmailOtpInvalid(true) : setPhoneOtpInvalid(true);
+        }
     };
 
+    const handleDistrictChange = (e) => {
+        const id = e.target.value;
+        const found = keralaData.find(d => d.id == id);
+        setForm({ ...form, district: Number(id), panchayath: '', ward: '' });
+        setPanchayaths(found?.panchayaths || []);
+        setWards([]);
+        setErrors(prev => ({ ...prev, district: "" })); // Clear error
+    };
     const handlePanchayathChange = (e) => {
-        const panchayathId = e.target.value;
-        const found = panchayaths.find(p => p.id == panchayathId);
-        setForm({ ...form, panchayath: Number(panchayathId), ward: '' });
+        const id = e.target.value;
+        const found = panchayaths.find(p => p.id == id);
+        setForm({ ...form, panchayath: Number(id), ward: '' });
         setWards(found?.wards || []);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!validate()) return;
         if (!isEmailVerified || !isPhoneVerified) {
-            return alert("Please verify both Email and Phone before registering");
+            setErrors(prev => ({ ...prev, server: "Email and Phone must be verified first" }));
+            return;
         }
+
+        setLoading(true);
         try {
             await API.post("auth/register/", form);
-            alert("Registration successful");
-        } catch (err) { console.log(err.response?.data); }
+            alert("Registration Successful!");
+            navigate('/login')
+
+        } catch (err) {
+            const serverData = err.response?.data;
+            // If backend says username exists, map it to the username error state
+            if (serverData?.username) {
+                setErrors(prev => ({ ...prev, username: "This username is already taken" }));
+            } else {
+                setErrors(prev => ({ ...prev, server: "Registration failed. Please check all fields." }));
+            }
+        } finally {
+            setLoading(false);
+        }
     };
 
+    // Helper for clean class names
+    const inputClass = (fieldName) => `w-full px-4 py-3 rounded-xl border transition-all outline-none focus:ring-2 ${
+        errors[fieldName] ? 'border-red-500 focus:ring-red-100 bg-red-50/30' : 'border-slate-200 focus:ring-green-100 focus:border-green-500'
+    }`;
+
+    // Helper for error messages
+    const ErrorLabel = ({ field }) => errors[field] ? (
+        <p className="text-red-500 text-xs font-bold mt-1.5 ml-1 animate-in fade-in slide-in-from-left-1">
+            {errors[field]}
+        </p>
+    ) : null;
+
     return (
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '400px' }}>
-            <h2>Register</h2>
-            
-            <input placeholder="Username" onChange={(e) => setForm({ ...form, username: e.target.value })} />
+        <div className="min-h-screen bg-slate-50 py-12 px-4 flex justify-center">
+            <div className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl p-10 border border-slate-100">
+                <h2 className="text-3xl font-black text-slate-900 mb-8">Create Account</h2>
 
-            {/* EMAIL SECTION */}
-            <div className="verify-group">
-                <div style={{ display: 'flex', gap: '5px' }}>
-                    <input 
-                        placeholder="Email" 
-                        disabled={isEmailVerified}
-                        onChange={(e) => setForm({ ...form, email: e.target.value })} 
-                    />
-                    {!isEmailVerified && (
-                        <button type="button" onClick={() => sendOtp('email', form.email)}>
-                            {emailOtpSent ? "Resend" : "Generate OTP"}
-                        </button>
-                    )}
-                </div>
-                {emailOtpSent && !isEmailVerified && (
-                    <div style={{ marginTop: '5px' }}>
-                        <input placeholder="Enter Email OTP" onChange={(e) => setEmailOtp(e.target.value)} />
-                        <button type="button" onClick={() => verifyOtp('email', emailOtp)}>Verify</button>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    {errors.server && <div className="p-4 bg-red-50 text-red-700 rounded-xl border border-red-200 font-bold text-sm">{errors.server}</div>}
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label className="text-sm font-bold text-slate-700 block mb-2">Username</label>
+                            <input className={inputClass('username')} placeholder="Username" onChange={(e) => { setForm({ ...form, username: e.target.value }); setErrors({ ...errors, username: '' }); }} />
+                            <ErrorLabel field="username" />
+                        </div>
+                        <div>
+                            <label className="text-sm font-bold text-slate-700 block mb-2">Password</label>
+                            <input type="password" className={inputClass('password')} placeholder="••••••••" onChange={(e) => { setForm({ ...form, password: e.target.value }); setErrors({ ...errors, password: '' }); }} />
+                            <ErrorLabel field="password" />
+                        </div>
                     </div>
-                )}
-                {isEmailVerified && <span style={{ color: 'green' }}>✓ Email Verified</span>}
-            </div>
 
-            {/* PHONE SECTION */}
-            <div className="verify-group">
-                <div style={{ display: 'flex', gap: '5px' }}>
-                    <input 
-                        placeholder="Phone No" 
-                        disabled={isPhoneVerified}
-                        onChange={(e) => setForm({ ...form, phone: e.target.value })} 
-                    />
-                    {!isPhoneVerified && (
-                        <button type="button" onClick={() => sendOtp('phone', form.phone)}>
-                            {phoneOtpSent ? "Resend" : "Generate OTP"}
-                        </button>
-                    )}
-                </div>
-                {phoneOtpSent && !isPhoneVerified && (
-                    <div style={{ marginTop: '5px' }}>
-                        <input placeholder="Enter Phone OTP" onChange={(e) => setPhoneOtp(e.target.value)} />
-                        <button type="button" onClick={() => verifyOtp('phone', phoneOtp)}>Verify</button>
+                    {/* Email Group */}
+                    <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <label className="block text-sm font-bold text-slate-700 mb-2">Email Verification</label>
+                        <div className="flex gap-2">
+                            <input 
+                                disabled={isEmailVerified} 
+                                className={inputClass(errors.email)} 
+                                placeholder="mail@example.com"
+                                onChange={(e) => setForm({ ...form, email: e.target.value })} 
+                            />
+                            {!isEmailVerified && (
+                                <button type="button" onClick={() => sendOtp('email', form.email)} className="bg-slate-800 text-white px-4 rounded-lg text-sm font-bold hover:bg-slate-700 whitespace-nowrap">
+                                    {emailOtpSent ? "Resend" : "Get OTP"}
+                                </button>
+                            )}
+                        </div>
+                        {emailOtpSent && !isEmailVerified && (
+                            <div className="flex gap-2 mt-2 animate-in slide-in-from-top-2">
+                                <input className={inputClass()} placeholder="Enter 6-digit OTP" onChange={(e) => setEmailOtp(e.target.value)} />
+                                <button type="button" onClick={() => verifyOtp('email', emailOtp)} className="bg-green-600 text-white px-6 rounded-lg font-bold">Verify</button>
+                            </div>
+                        )}
+                        {isEmailVerified ? <p className="text-green-600 text-xs font-bold mt-2 flex items-center gap-1">✓ Verified Email ID</p> :
+                        emailOtpInvalid && <p className="text-red-600 text-xs font-bold mt-2 flex items-center gap-1">✘ OTP is wrong</p>}
                     </div>
-                )}
-                {isPhoneVerified && <span style={{ color: 'green' }}>✓ Phone Verified</span>}
+
+                    {/* Phone Group */}
+                    <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <label className="block text-sm font-bold text-slate-700 mb-2">Phone Verification</label>
+                        <div className="flex gap-2">
+                            <input 
+                                disabled={isPhoneVerified} 
+                                className={inputClass(errors.phone)} 
+                                placeholder="10-digit number"
+                                onChange={(e) => setForm({ ...form, phone: e.target.value })} 
+                            />
+                            {!isPhoneVerified && (
+                                <button type="button" onClick={() => sendOtp('phone', form.phone)} className="bg-slate-800 text-white px-4 rounded-lg text-sm font-bold hover:bg-slate-700 whitespace-nowrap">
+                                    {phoneOtpSent ? "Resend" : "Get OTP"}
+                                </button>
+                            )}
+                        </div>
+                        {phoneOtpSent &&  (
+                            <div className="flex gap-2 mt-2">
+                                <input className={inputClass()} placeholder="Enter OTP" onChange={(e) => setPhoneOtp(e.target.value)} />
+                                <button type="button" onClick={() => verifyOtp('phone', phoneOtp)} className="bg-green-600 text-white px-6 rounded-lg font-bold">Verify</button>
+                            </div>
+                        )}
+                        {phoneOtpInvalid && <p className="text-red-600 text-xs font-bold mt-2 flex items-center gap-1">✘ OTP is wrong</p>}
+                        {isPhoneVerified && <p className="text-green-600 text-xs font-bold mt-2 flex items-center gap-1">✓ Verified Phone no</p>}
+                    </div>
+
+                    {/* Address Grid */}
+                    <div className="bg-slate-50/50 p-6 rounded-2xl border border-slate-100 space-y-4">
+                        <label className="text-xs font-black uppercase text-slate-400">Address Details</label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <select className={inputClass('district')} onChange={handleDistrictChange}>
+                                    <option value="">Select District</option>
+                                    {keralaData.map((d) => <option key={d.id} value={d.id}>{d.district}</option>)}
+                                </select>
+                                <ErrorLabel field="district" />
+                            </div>
+                            <div>
+                                <select className={inputClass('panchayath')} onChange={handlePanchayathChange} disabled={!form.district}>
+                                    <option value="">Select Panchayath</option>
+                                    {panchayaths.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+                                </select>
+                                <ErrorLabel field="panchayath" />
+                            </div>
+                            <div>
+                                <select className={inputClass('ward')} onChange={(e) => { setForm({ ...form, ward: Number(e.target.value) }); setErrors({...errors, ward:''}) }} disabled={!form.panchayath}>
+                                    <option value="">Select Ward</option>
+                                    {wards.map((w) => <option key={w.id} value={w.id}>Ward {w.number}</option>)}
+                                </select>
+                                <ErrorLabel field="ward" />
+                            </div>
+                            <div>
+                                <input className={inputClass('houseNo')} placeholder="House No/Name" disabled={!form.ward} onChange={(e) => { setForm({ ...form, houseNo: e.target.value }); setErrors({...errors, houseNo:''}) }} />
+                                <ErrorLabel field="houseNo" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <button 
+                        type="submit" 
+                        disabled={loading}
+                        className={`w-full py-4 rounded-2xl font-black text-white shadow-xl transition-all active:scale-95 ${
+                            loading ? 'bg-slate-300' : 'bg-green-600 hover:bg-green-700 shadow-green-100'
+                        }`}
+                    >
+                        {loading ? 'Creating Account...' : 'Register Now'}
+                    </button>
+                </form>
             </div>
-
-            <input type="password" placeholder="Password" onChange={(e) => setForm({ ...form, password: e.target.value })} />
-
-            {/* Address Selects */}
-            <select onChange={handleDistrictChange}>
-                <option value="">Select District</option>
-                {data.map((d) => <option key={d.id} value={d.id}>{d.district}</option>)}
-            </select>
-
-            <select onChange={handlePanchayathChange} disabled={!form.district}>
-                <option value="">Select Panchayath</option>
-                {panchayaths.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
-            </select>
-
-            <select onChange={(e) => setForm({ ...form, ward: Number(e.target.value) })} disabled={!form.panchayath}>
-                <option value="">Select Ward</option>
-                {wards.map((w) => <option key={w.id} value={w.id}>Ward {w.number}</option>)}
-            </select>
-
-            <input placeholder="House No" disabled={!form.ward} onChange={(e) => setForm({ ...form, houseNo: e.target.value })} />
-
-            <button 
-                type="submit" 
-                disabled={!isEmailVerified || !isPhoneVerified}
-                style={{ backgroundColor: (isEmailVerified && isPhoneVerified) ? 'blue' : 'gray', color: 'white' }}
-            >
-                Register
-            </button>
-        </form>
+        </div>
     );
 }

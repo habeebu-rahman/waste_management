@@ -46,10 +46,34 @@ class WasteRequestSerializer(serializers.ModelSerializer):
 class WasteComplaintSerializer(serializers.ModelSerializer):
     user_name = serializers.ReadOnlyField(source='user.username')
     user_phone = serializers.ReadOnlyField(source='user.phone')
+    collector_name = serializers.ReadOnlyField(source='collector.username')
     
     # This will return the 'name' from the WasteCategory model instead of the ID
     category_name = serializers.ReadOnlyField(source='category.name')
     class Meta:
         model = WASTE_COMPLAINT
-        fields = ['id', 'user_name', 'category', 'category_name', 'place', 'status','latitude','longitude','user_phone']
+        fields = ['id', 'user_name', 'category', 'category_name', 'place', 'status','latitude','longitude','user_phone','image','collector','collector_name']
         read_only_fields = ['user']
+        
+        
+    def get_queryset(self):
+        user = self.request.user
+        qs = WASTE_COMPLAINT.objects.filter(collector=user)
+        print(f"DEBUG: User {user.username} is requesting complaints. Found: {qs.count()}")
+        return qs
+        
+    def create(self, validated_data):
+        request = self.context.get('request')
+        user = request.user
+        validated_data['user'] = user
+
+        # CRITICAL FIX: 
+        # If your model uses 'place' instead of 'address', 
+        # ensure you aren't trying to save to a field that doesn't exist.
+        if not validated_data.get('place'):
+            if hasattr(user, 'address') and user.address:
+                validated_data['place'] = user.address
+            else:
+                validated_data['place'] = "Unknown Location"
+
+        return super().create(validated_data)
