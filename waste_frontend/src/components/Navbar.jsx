@@ -52,6 +52,10 @@ export function AppNavbar() {
                             }
                             {role === "admin" && <Link to="/admin" className="!text-slate-300 hover:!text-green-500 font-bold !no-underline">Admin Panel</Link>}
                             {role === "collector" && <Link to="/collector" className="!text-slate-300 hover:!text-green-500 font-bold !no-underline">Collector Portal</Link>}
+
+                            <Link to="/profile" className="!text-slate-300 hover:!text-white font-medium !no-underline transition-all hover:-translate-y-0.5">
+                                profile
+                            </Link>
                             
                             <button 
                                 onClick={logout}
@@ -78,9 +82,16 @@ export function AppNavbar() {
                     <Link to="/" className="!text-slate-300 hover:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline" onClick={() => setIsOpen(false)}>Home</Link>
                     {role ? (
                         <>
-                        {role === "citizen" && <Link to="/request" className="!text-slate-300 hover:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline">Report Issue</Link>}
+                        {role === "citizen" && 
+                        <>
+                            <Link to="/request" className="!text-slate-300 hover:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline">Report Issue</Link>
+                            <Link to="/complaint" className="!text-slate-300 hover:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline">complaint Issue</Link>
+                        </>
+                        }
                         {role === "admin" && <Link to="/admin" className="!text-slate-300 hover:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline">Admin Panel</Link>}
                         {role === "collector" && <Link to="/collector" className="!text-slate-300 hover:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline">Collector Portal</Link>}
+
+                        <Link to="/profile" className="!text-slate-300 hover:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline" onClick={() => setIsOpen(false)}>profile</Link>
                         <button onClick={logout} className="bg-rose-600 text-white p-3 rounded-lg w-full font-bold mt-2">Logout</button>
                         </>
                     ) : (

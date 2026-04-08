@@ -51,7 +51,7 @@ export function Register() {
         return Object.keys(e).length === 0;
     };
 
-    // --- 2. OTP & API Handlers ---
+    //--- 2. OTP & API Handlers ---
     const sendOtp = async (type, value) => {
         if (!value) {
             setErrors(prev => ({ ...prev, [type]: `Enter ${type} to receive OTP` }));

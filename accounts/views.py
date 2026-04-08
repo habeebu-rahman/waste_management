@@ -20,13 +20,23 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
     
 class MeView(APIView):
-    permission_classes =[IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     
-    def get(self,request):
-        return Response({
-            'username':request.user.username,
-            'role': request.user.role,
-        })
+    def get(self, request):
+        serializer = RegisterSerializer(request.user)
+        return Response(serializer.data)
+
+    # ADD THIS: This is what saves the data to the database
+    def patch(self, request):
+        # 'partial=True' allows you to update just the address or phone 
+        # without needing to send the password every time.
+        serializer = RegisterSerializer(request.user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
+
+
 
 class UserListView(generics.ListAPIView):
     serializer_class = RegisterSerializer # Or a simpler UserSerializer if you have one
@@ -34,7 +44,7 @@ class UserListView(generics.ListAPIView):
 
     def get_queryset(self):
         # We only want users where the role is 'collector'
-        return USER.objects.filter(role='collector')
+        return USER.objects.filter(role='collector').select_related('district', 'panchayath', 'ward')
 
 load_dotenv()
 # def send_real_sms(phone_number, otp_code):

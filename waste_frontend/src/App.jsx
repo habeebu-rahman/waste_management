@@ -8,6 +8,7 @@ import { AdminDashboard } from './pages/AdminDashboard'
 import { CollectorDashboard } from './pages/CollectorDashboard'
 import { ProtectedRoute } from './pages/ProtectedRoute'
 import { ComplaintRegister } from './pages/ComplaintRegister'
+import { Profile } from './pages/profile'
 
 export default function App(){
   return(
@@ -16,6 +17,7 @@ export default function App(){
       <Routes>
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />
+        <Route path='/profile' element={<Profile />} />
 
         <Route 
           path='/' 
