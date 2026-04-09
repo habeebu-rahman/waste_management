@@ -48,8 +48,13 @@ export function Dashboard() {
                         <div key={item.id} className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
                             <div className="bg-blue-50 p-3 rounded-xl text-2xl">📅</div>
                             <div>
-                                <h3 className="font-black text-slate-800 leading-tight">{item.category}</h3>
-                                <p className="text-sm text-slate-500 font-bold mt-1">{item.data}</p>
+                                <p className="text-xs font-black text-blue-500 uppercase">{item.waste_type}</p>
+                                <h4 className="font-bold text-slate-700">Ward {item.ward}, {item.panchayath_name}</h4>
+                                <p className="text-sm text-slate-500">Collector: {item.collector_name || 'Not Assigned'}</p>
+                            </div>
+                            <div className="text-right">
+                                <p className="text-lg font-black text-slate-800">{new Date(item.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</p>
+                                <p className="text-xs font-bold text-slate-400">2026</p>
                             </div>
                         </div>
                     ))}

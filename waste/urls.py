@@ -4,7 +4,7 @@ from .views import WasteCategoryViewSet,CollectionScheduleViewSet,WasteRequestVi
 
 router = DefaultRouter()
 router.register('categories',WasteCategoryViewSet)
-router.register('schedules',CollectionScheduleViewSet)
+router.register('schedules',CollectionScheduleViewSet,basename='collectionschedule')
 router.register('requests',WasteRequestViewSet)
 router.register('complaint',WasteComplaintViewSet)
 

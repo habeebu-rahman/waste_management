@@ -50,7 +50,12 @@ export function AppNavbar() {
                                 <Link to="/complaint" className="!text-slate-300 hover:!text-green-500 !no-underline font-medium">complaint Issue</Link>
                             </>
                             }
-                            {role === "admin" && <Link to="/admin" className="!text-slate-300 hover:!text-green-500 font-bold !no-underline">Admin Panel</Link>}
+                            {role === "admin" && 
+                            <>
+                                <Link to="/admin" className="!text-slate-300 hover:!text-green-500 font-bold !no-underline">Admin Panel</Link>
+                                <Link to="/collection_schedule" className="!text-slate-300 hover:!text-green-500 font-bold !no-underline">Collection Schedule</Link>
+                            </>
+                            }
                             {role === "collector" && <Link to="/collector" className="!text-slate-300 hover:!text-green-500 font-bold !no-underline">Collector Portal</Link>}
 
                             <Link to="/profile" className="!text-slate-300 hover:!text-white font-medium !no-underline transition-all hover:-translate-y-0.5">

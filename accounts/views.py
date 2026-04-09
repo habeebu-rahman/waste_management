@@ -3,6 +3,7 @@ from django.shortcuts import render
 from rest_framework import generics
 from .models import USER,OTPVerification
 from .serializers import RegisterSerializer
+from waste.serializers import ScheduleSerializer
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -119,3 +120,4 @@ class VerifyOTPView(APIView):
             return Response({"status": "verified"})
         except OTPVerification.DoesNotExist:
             return Response({"error": "Invalid"}, status=400)
+        

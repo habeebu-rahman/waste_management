@@ -9,6 +9,7 @@ import { CollectorDashboard } from './pages/CollectorDashboard'
 import { ProtectedRoute } from './pages/ProtectedRoute'
 import { ComplaintRegister } from './pages/ComplaintRegister'
 import { Profile } from './pages/profile'
+import { CollectScheduleForm } from './pages/CollectScheduleForm'
 
 export default function App(){
   return(
@@ -50,6 +51,14 @@ export default function App(){
           element={
             <ProtectedRoute roleRequired = 'admin'>
               <AdminDashboard />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path='/collection_schedule' 
+          element={
+            <ProtectedRoute roleRequired = 'admin'>
+              <CollectScheduleForm />
             </ProtectedRoute>
           } 
         />

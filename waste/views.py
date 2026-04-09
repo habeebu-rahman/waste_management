@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets
 from .models import WASTE_CATEGORY,COLLECTION_SCHEDULE,WASTE_REQUEST,WASTE_COMPLAINT
-from .serializers import WasteCategorySerializer,CollectionScheduleSerializer,WasteRequestSerializer,WasteComplaintSerializer
+from .serializers import WasteCategorySerializer,WasteRequestSerializer,WasteComplaintSerializer,ScheduleSerializer
 from django.core.mail import send_mail
 from twilio.rest import Client
 from rest_framework.permissions import IsAuthenticated
@@ -12,10 +12,6 @@ from rest_framework.permissions import IsAuthenticated
 class WasteCategoryViewSet(viewsets.ModelViewSet):
     queryset = WASTE_CATEGORY.objects.all()
     serializer_class = WasteCategorySerializer
-    
-class CollectionScheduleViewSet(viewsets.ModelViewSet):
-    queryset = COLLECTION_SCHEDULE.objects.all()
-    serializer_class = CollectionScheduleSerializer
     
 class WasteRequestViewSet(viewsets.ModelViewSet):
     # We use select_related to optimize the database query for category/user names
@@ -95,3 +91,31 @@ class WasteComplaintViewSet(viewsets.ModelViewSet):
         #         from_ = '+914553258528',
         #         to=phone,
         #     )
+        
+
+    
+class CollectionScheduleViewSet(viewsets.ModelViewSet):
+    serializer_class = ScheduleSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        
+        # 1. Admins and Collectors see all upcoming schedules
+        if user.role in ['admin', 'collector'] or user.is_staff:
+            return COLLECTION_SCHEDULE.objects.all().order_by('date')
+        
+        # 2. Citizens only see schedules matching their specific location
+        return COLLECTION_SCHEDULE.objects.filter(
+            district=user.district,
+            panchayath=user.panchayath,
+            ward=user.ward
+        ).order_by('date')
+
+    def perform_create(self, serializer):
+        # 3. Validation: Only admins can actually post/create a new schedule
+        if self.request.user.role == 'admin' or self.request.user.is_staff:
+            serializer.save()
+        else:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Only admins can schedule waste collections.")

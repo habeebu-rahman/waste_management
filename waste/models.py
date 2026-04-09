@@ -14,10 +14,24 @@ class WASTE_CATEGORY(models.Model):
 class COLLECTION_SCHEDULE(models.Model):
     category = models.ForeignKey(WASTE_CATEGORY,on_delete=models.CASCADE)
     date = models.DateField()
-    area = models.CharField(max_length=200)
+    # category_type = models.CharField(max_length=20, choices=category)
     
+    # Location mapping
+    district = models.IntegerField()  # Storing IDs from your kerala.json
+    panchayath = models.IntegerField()
+    ward = models.IntegerField()
+
+    # Assigned Collector
+    collector = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        limit_choices_to={'role': 'collector'},
+        related_name='schedules'
+    )
+
     def __str__(self):
-        return f'{self.category} - {self.date}'
+        return f"{self.category} collection on {self.date} at Ward {self.ward}"
     
 class WASTE_REQUEST(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)

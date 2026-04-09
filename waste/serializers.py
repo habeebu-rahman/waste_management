@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import WASTE_CATEGORY,COLLECTION_SCHEDULE,WASTE_REQUEST,WASTE_COMPLAINT
+from .models import WASTE_CATEGORY,COLLECTION_SCHEDULE,WASTE_REQUEST,WASTE_COMPLAINT,COLLECTION_SCHEDULE
 
 class WasteCategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -77,3 +77,23 @@ class WasteComplaintSerializer(serializers.ModelSerializer):
                 validated_data['place'] = "Unknown Location"
 
         return super().create(validated_data)
+    
+class ScheduleSerializer(serializers.ModelSerializer):
+    collector_name = serializers.ReadOnlyField(source='collector.username')
+    category_name = serializers.ReadOnlyField(source='category.name')
+    
+    # We define a method to return the "Ward {number}" string
+    ward_display = serializers.SerializerMethodField()
+
+    class Meta:
+        model = COLLECTION_SCHEDULE
+        fields = [
+            'id', 'date', 'category', 'category_name', 
+            'district', 'panchayath', 'ward', 'ward_display', 
+            'collector', 'collector_name'
+        ]
+
+    def get_ward_display(self, obj):
+        # Since your model stores the ward as an Integer, 
+        # you can format how it looks when it leaves the API.
+        return f"Ward {obj.ward}"
