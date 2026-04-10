@@ -18,12 +18,16 @@ class RegisterSerializer(serializers.ModelSerializer):
             'district', 'district_name', 
             'panchayath', 'panchayath_name', 
             'ward', 'ward_name', 
-            'houseNo'
+            'houseNo','password'
         ]
         extra_kwargs = {
-            'password': {'write_only': True, 'required': False}, # Password not required for Profile Update
+            'password': {'write_only': True,'required': True},
             'district': {'write_only': True},
             'panchayath': {'write_only': True},
             'ward': {'write_only': True},
         }
+        
+    def create(self, validated_data):
+        # Use create_user to ensure the password is encrypted/hashed
+        return USER.objects.create_user(**validated_data)
 

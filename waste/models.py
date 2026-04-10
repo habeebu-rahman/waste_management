@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from accounts.models import District,Panchayath,Ward
 
 # Create your models here.
 
@@ -17,9 +18,10 @@ class COLLECTION_SCHEDULE(models.Model):
     # category_type = models.CharField(max_length=20, choices=category)
     
     # Location mapping
-    district = models.IntegerField()  # Storing IDs from your kerala.json
-    panchayath = models.IntegerField()
-    ward = models.IntegerField()
+    district = models.ForeignKey(District, on_delete=models.SET_NULL, null=True, blank=True)
+    panchayath = models.ForeignKey(Panchayath, on_delete=models.SET_NULL, null=True, blank=True)
+    ward = models.ForeignKey(Ward, on_delete=models.SET_NULL, null=True, blank=True)
+    
 
     # Assigned Collector
     collector = models.ForeignKey(

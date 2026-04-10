@@ -6,7 +6,6 @@ export function RequestPickup() {
     const [formRequest, setFormRequest] = useState({
         category: '',
         preferred_date: '',
-        address: '' // Added address field
     });
 
     const getMinDate = () => {
@@ -25,7 +24,7 @@ export function RequestPickup() {
         e.preventDefault();
         
         // Basic Validation
-        if(!formRequest.category || !formRequest.address || !formRequest.preferred_date) {
+        if(!formRequest.category|| !formRequest.preferred_date) {
             alert("Please fill all fields");
             return;
         }
@@ -34,7 +33,7 @@ export function RequestPickup() {
             await API.post("waste/requests/", formRequest);
             alert('🎉 Pickup Request Submitted Successfully!');
             // Reset form
-            setFormRequest({ category: '', preferred_date: '', address: '' });
+            setFormRequest({ category: '', preferred_date: ''});
         } catch (err) {
             console.error(err.response?.data);
             alert("Submission failed. Please check your connection.");
@@ -69,7 +68,7 @@ export function RequestPickup() {
                     </div>
 
                     {/* Address Field */}
-                    <div>
+                    {/* <div>
                         <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Collection Address</label>
                         <textarea 
                             value={formRequest.address}
@@ -78,7 +77,7 @@ export function RequestPickup() {
                             className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all resize-none"
                             onChange={(e) => setFormRequest({ ...formRequest, address: e.target.value })}
                         />
-                    </div>
+                    </div> */}
 
                     {/* Date Field */}
                     <div>

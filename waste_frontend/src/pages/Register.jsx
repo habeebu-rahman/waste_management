@@ -57,6 +57,19 @@ export function Register() {
             setErrors(prev => ({ ...prev, [type]: `Enter ${type} to receive OTP` }));
             return;
         }
+        if(type==='email'){
+            if (!/^\S+@\S+\.\S+$/.test(value)){
+                setErrors(prev => ({ ...prev, [type]: 'Invalid email format' }));
+                return;
+            }
+        }
+        if(type==='phone'){
+            if (!/^\d{10}$/.test(value)){
+                setErrors(prev => ({ ...prev, [type]: 'Enter a valid 10-digit mobile number' }));
+                return;
+            }
+        }
+
         try {
             await API.post("auth/send-otp/", { type, value });
             type === 'email' ? setEmailOtpSent(true) : setPhoneOtpSent(true);
@@ -153,7 +166,7 @@ export function Register() {
                         </div>
                         <div>
                             <label className="text-sm font-bold text-slate-700 block mb-2">Password</label>
-                            <input type="password" className={inputClass('password')} placeholder="••••••••" onChange={(e) => { setForm({ ...form, password: e.target.value }); setErrors({ ...errors, password: '' }); }} />
+                            <input type="password" value={form.password} className={inputClass('password')} placeholder="••••••••" onChange={(e) => { setForm({ ...form, password: e.target.value }); setErrors({ ...errors, password: '' }); }} />
                             <ErrorLabel field="password" />
                         </div>
                     </div>
@@ -163,25 +176,41 @@ export function Register() {
                         <label className="block text-sm font-bold text-slate-700 mb-2">Email Verification</label>
                         <div className="flex gap-2">
                             <input 
+                                type="email"
+                                value={form.email}
                                 disabled={isEmailVerified} 
-                                className={inputClass(errors.email)} 
+                                className={inputClass('email')} 
                                 placeholder="mail@example.com"
-                                onChange={(e) => setForm({ ...form, email: e.target.value })} 
+                                onChange={(e) => {
+                                    setForm({ ...form, email: e.target.value });
+                                    setErrors({ ...errors, email: '' });
+                                }} 
                             />
                             {!isEmailVerified && (
-                                <button type="button" onClick={() => sendOtp('email', form.email)} className="bg-slate-800 text-white px-4 rounded-lg text-sm font-bold hover:bg-slate-700 whitespace-nowrap">
+                                <button type="button" onClick={() => sendOtp('email', form.email)} className="bg-slate-800 text-white px-3 !rounded-lg text-sm font-bold hover:bg-slate-700 whitespace-nowrap">
                                     {emailOtpSent ? "Resend" : "Get OTP"}
                                 </button>
                             )}
                         </div>
+                        
+                        {/* --- OTP INPUT SPACE --- */}
                         {emailOtpSent && !isEmailVerified && (
                             <div className="flex gap-2 mt-2 animate-in slide-in-from-top-2">
-                                <input className={inputClass()} placeholder="Enter 6-digit OTP" onChange={(e) => setEmailOtp(e.target.value)} />
-                                <button type="button" onClick={() => verifyOtp('email', emailOtp)} className="bg-green-600 text-white px-6 rounded-lg font-bold">Verify</button>
+                                <input 
+                                    className={inputClass('emailOtp')} // Added specific field name for styling
+                                    placeholder="Enter 6-digit OTP" 
+                                    value={emailOtp}
+                                    onChange={(e) => setEmailOtp(e.target.value)} 
+                                />
+                                <button type="button" onClick={() => verifyOtp('email', emailOtp)} className="bg-green-600 hover:bg-green-500 text-white px-4 !rounded-lg font-bold">
+                                    Verify
+                                </button>
                             </div>
                         )}
-                        {isEmailVerified ? <p className="text-green-600 text-xs font-bold mt-2 flex items-center gap-1">✓ Verified Email ID</p> :
-                        emailOtpInvalid && <p className="text-red-600 text-xs font-bold mt-2 flex items-center gap-1">✘ OTP is wrong</p>}
+                        
+                        <ErrorLabel field="email" />
+                        {isEmailVerified && <p className="text-green-600 text-xs font-bold mt-2 flex items-center gap-1">✓ Verified Email ID</p>}
+                        {emailOtpInvalid && !isEmailVerified && <p className="text-red-600 text-xs font-bold mt-2">✘ OTP is wrong</p>}
                     </div>
 
                     {/* Phone Group */}
@@ -189,25 +218,41 @@ export function Register() {
                         <label className="block text-sm font-bold text-slate-700 mb-2">Phone Verification</label>
                         <div className="flex gap-2">
                             <input 
+                                type="text"
+                                value={form.phone}
                                 disabled={isPhoneVerified} 
-                                className={inputClass(errors.phone)} 
+                                className={inputClass('phone')} 
                                 placeholder="10-digit number"
-                                onChange={(e) => setForm({ ...form, phone: e.target.value })} 
+                                onChange={(e) => {
+                                    setForm({ ...form, phone: e.target.value });
+                                    setErrors({ ...errors, phone: '' });
+                                }} 
                             />
                             {!isPhoneVerified && (
-                                <button type="button" onClick={() => sendOtp('phone', form.phone)} className="bg-slate-800 text-white px-4 rounded-lg text-sm font-bold hover:bg-slate-700 whitespace-nowrap">
+                                <button type="button" onClick={() => sendOtp('phone', form.phone)} className="bg-slate-800 text-white px-3 !rounded-lg text-sm font-bold hover:bg-slate-700 whitespace-nowrap">
                                     {phoneOtpSent ? "Resend" : "Get OTP"}
                                 </button>
                             )}
                         </div>
-                        {phoneOtpSent &&  (
-                            <div className="flex gap-2 mt-2">
-                                <input className={inputClass()} placeholder="Enter OTP" onChange={(e) => setPhoneOtp(e.target.value)} />
-                                <button type="button" onClick={() => verifyOtp('phone', phoneOtp)} className="bg-green-600 text-white px-6 rounded-lg font-bold">Verify</button>
+
+                        {/* --- OTP INPUT SPACE --- */}
+                        {phoneOtpSent && !isPhoneVerified && (
+                            <div className="flex gap-2 mt-2 animate-in slide-in-from-top-2">
+                                <input 
+                                    className={inputClass('phoneOtp')} 
+                                    placeholder="Enter OTP" 
+                                    value={phoneOtp}
+                                    onChange={(e) => setPhoneOtp(e.target.value)} 
+                                />
+                                <button type="button" onClick={() => verifyOtp('phone', phoneOtp)} className="bg-green-600 hover:bg-green-500 text-white px-4 !rounded-lg font-bold">
+                                    Verify
+                                </button>
                             </div>
                         )}
-                        {phoneOtpInvalid && <p className="text-red-600 text-xs font-bold mt-2 flex items-center gap-1">✘ OTP is wrong</p>}
+
+                        <ErrorLabel field="phone" />
                         {isPhoneVerified && <p className="text-green-600 text-xs font-bold mt-2 flex items-center gap-1">✓ Verified Phone no</p>}
+                        {phoneOtpInvalid && !isPhoneVerified && <p className="text-red-600 text-xs font-bold mt-2">✘ OTP is wrong</p>}
                     </div>
 
                     {/* Address Grid */}
@@ -245,7 +290,7 @@ export function Register() {
                     <button 
                         type="submit" 
                         disabled={loading}
-                        className={`w-full py-4 rounded-2xl font-black text-white shadow-xl transition-all active:scale-95 ${
+                        className={`w-full py-4 !rounded-2xl font-black text-white !shadow-xl !transition-all active:scale-95 ${
                             loading ? 'bg-slate-300' : 'bg-green-600 hover:bg-green-700 shadow-green-100'
                         }`}
                     >

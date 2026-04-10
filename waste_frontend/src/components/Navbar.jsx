@@ -29,13 +29,13 @@ export function AppNavbar() {
 
                 {/* 2. DESKTOP MENU - Clean spacing, no underlines */}
                 <div className="hidden md:flex items-center gap-8">
-                    <Link to="/" className="!text-slate-300 hover:!text-white font-medium !no-underline transition-all hover:-translate-y-0.5">
+                    <Link to="/" className="!text-slate-300 hover:!text-white focus:!text-white font-medium !no-underline transition-all hover:-translate-y-0.5">
                         Home
                     </Link>
                     
                     {!role ? (
                         <div className="flex items-center gap-4">
-                            <Link to="/login" className="!text-slate-300 hover:!text-green-500 !no-underline font-medium px-4 py-2 rounded-lg hover:bg-slate-800 transition-colors">
+                            <Link to="/login" className="!text-slate-300 hover:!text-green-500 focus:!text-green-500 !no-underline font-medium px-4 py-2 rounded-lg hover:bg-slate-800 transition-colors">
                                 Login
                             </Link>
                             <Link to="/register" className="bg-green-600 hover:!bg-green-500 text-white !no-underline font-bold px-6 py-2 rounded-full shadow-lg transition-all active:scale-95">
@@ -46,19 +46,19 @@ export function AppNavbar() {
                         <div className="flex items-center gap-6">
                             {role === "citizen" && 
                             <>
-                                <Link to="/request" className="!text-slate-300 hover:!text-green-500 !no-underline font-medium">Report Issue</Link>
-                                <Link to="/complaint" className="!text-slate-300 hover:!text-green-500 !no-underline font-medium">complaint Issue</Link>
+                                <Link to="/request" className="!text-slate-300 hover:!text-green-500 focus:!text-green-500 !no-underline font-medium">Report Issue</Link>
+                                <Link to="/complaint" className="!text-slate-300 hover:!text-green-500 focus:!text-green-500 !no-underline font-medium">complaint Issue</Link>
                             </>
                             }
                             {role === "admin" && 
                             <>
-                                <Link to="/admin" className="!text-slate-300 hover:!text-green-500 font-bold !no-underline">Admin Panel</Link>
-                                <Link to="/collection_schedule" className="!text-slate-300 hover:!text-green-500 font-bold !no-underline">Collection Schedule</Link>
+                                <Link to="/admin" className="!text-slate-300 hover:!text-green-500 focus:!text-green-500 font-bold !no-underline">Admin Panel</Link>
+                                <Link to="/collection_schedule" className="!text-slate-300 hover:!text-green-500 focus:!text-green-500 font-bold !no-underline">Collection Schedule</Link>
                             </>
                             }
-                            {role === "collector" && <Link to="/collector" className="!text-slate-300 hover:!text-green-500 font-bold !no-underline">Collector Portal</Link>}
+                            {role === "collector" && <Link to="/collector" className="!text-slate-300 hover:!text-green-500 focus:!text-green-500 font-bold !no-underline">Collector Portal</Link>}
 
-                            <Link to="/profile" className="!text-slate-300 hover:!text-white font-medium !no-underline transition-all hover:-translate-y-0.5">
+                            <Link to="/profile" className="!text-slate-300 hover:!text-green-500 focus:!text-green-500 font-medium !no-underline transition-all hover:-translate-y-0.5">
                                 profile
                             </Link>
                             
@@ -84,25 +84,25 @@ export function AppNavbar() {
             {/* 4. MOBILE MENU */}
             {isOpen && (
                 <div className="md:hidden mt-4 flex flex-col gap-2 animate-in fade-in slide-in-from-top-4">
-                    <Link to="/" className="!text-slate-300 hover:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline" onClick={() => setIsOpen(false)}>Home</Link>
+                    <Link to="/" className="!text-slate-300 hover:!text-white focus:!text-white py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline" onClick={() => setIsOpen(false)}>Home</Link>
                     {role ? (
                         <>
                         {role === "citizen" && 
                         <>
-                            <Link to="/request" className="!text-slate-300 hover:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline">Report Issue</Link>
-                            <Link to="/complaint" className="!text-slate-300 hover:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline">complaint Issue</Link>
+                            <Link to="/request" className="!text-slate-300 hover:!text-green-500 focus:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline">Report Issue</Link>
+                            <Link to="/complaint" className="!text-slate-300 hover:!text-green-500 focus:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline">complaint Issue</Link>
                         </>
                         }
-                        {role === "admin" && <Link to="/admin" className="!text-slate-300 hover:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline">Admin Panel</Link>}
-                        {role === "collector" && <Link to="/collector" className="!text-slate-300 hover:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline">Collector Portal</Link>}
+                        {role === "admin" && <Link to="/admin" className="!text-slate-300 hover:!text-green-500 focus:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline">Admin Panel</Link>}
+                        {role === "collector" && <Link to="/collector" className="!text-slate-300 hover:!text-green-500 focus:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline">Collector Portal</Link>}
 
-                        <Link to="/profile" className="!text-slate-300 hover:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline" onClick={() => setIsOpen(false)}>profile</Link>
+                        <Link to="/profile" className="!text-slate-300 hover:!text-green-500 focus:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline" onClick={() => setIsOpen(false)}>profile</Link>
                         <button onClick={logout} className="bg-rose-600 text-white p-3 rounded-lg w-full font-bold mt-2">Logout</button>
                         </>
                     ) : (
                         <>
-                            <Link to="/login" className="!text-slate-300 hover:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline" onClick={() => setIsOpen(false)}>Login</Link>
-                            <Link to="/register" className="bg-green-600 hover:!bg-green-500 text-white py-3 px-4 rounded-lg text-center font-bold !no-underline mt-2" onClick={() => setIsOpen(false)}>Register</Link>
+                            <Link to="/login" className="!text-slate-300 hover:!text-green-500 focus:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline" onClick={() => setIsOpen(false)}>Login</Link>
+                            <Link to="/register" className="bg-green-600 hover:!bg-green-500 focus:!text-green-500 text-white py-3 px-4 rounded-lg text-center font-bold !no-underline mt-2" onClick={() => setIsOpen(false)}>Register</Link>
                         </>
                     )}
                 </div>

@@ -110,7 +110,7 @@ export function ComplaintRegister() {
                         <label className="block text-sm font-black text-slate-400 uppercase tracking-widest mb-2">Tap to Pin Location</label>
                         <div className="rounded-3xl overflow-hidden border-4 border-slate-50 shadow-inner flex-grow h-[300px] md:h-full">
                             <LoadScript googleMapsApiKey={API_KEY}>
-                                <GoogleMap 
+                                {/* <GoogleMap 
                                     center={location} 
                                     zoom={14} 
                                     mapContainerStyle={{ height: '100%', width: '100%' }} 
@@ -118,7 +118,7 @@ export function ComplaintRegister() {
                                     options={{ disableDefaultUI: true }}
                                 >
                                     <Marker position={location} />
-                                </GoogleMap>
+                                </GoogleMap> */}
                             </LoadScript>
                         </div>
                         <button className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 rounded-2xl shadow-lg shadow-blue-100 transition-transform active:scale-95">

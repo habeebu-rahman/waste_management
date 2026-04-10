@@ -83,14 +83,16 @@ class ScheduleSerializer(serializers.ModelSerializer):
     category_name = serializers.ReadOnlyField(source='category.name')
     
     # We define a method to return the "Ward {number}" string
-    ward_display = serializers.SerializerMethodField()
+    district_name = serializers.ReadOnlyField(source='district.name')
+    panchayath_name = serializers.ReadOnlyField(source='panchayath.name')
+    ward_number = serializers.ReadOnlyField(source='ward.number')
 
     class Meta:
         model = COLLECTION_SCHEDULE
         fields = [
             'id', 'date', 'category', 'category_name', 
-            'district', 'panchayath', 'ward', 'ward_display', 
-            'collector', 'collector_name'
+            'district', 'panchayath', 'ward', 'district_name', 
+            'collector', 'collector_name','panchayath_name','ward_number'
         ]
 
     def get_ward_display(self, obj):

@@ -98,7 +98,7 @@ export function Login() {
                     {/* Login Button */}
                     <button 
                         disabled={loading}
-                        className={`w-full py-4 rounded-xl font-bold text-white shadow-lg transition-all active:scale-95 flex justify-center items-center gap-2 ${
+                        className={`w-full py-3 !rounded-xl font-bold text-white shadow-lg transition-all active:scale-95 flex justify-center items-center gap-2 ${
                             loading ? 'bg-slate-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'
                         }`}
                     >
@@ -107,8 +107,8 @@ export function Login() {
                 </form>
 
                 {/* Footer */}
-                <p className="text-center text-slate-500 text-sm mt-8">
-                    Don't have an account? <a href="/register" className="text-green-600 font-bold hover:underline">Register here</a>
+                <p className="text-center text-slate-500 text-sm !mt-8">
+                    Don't have an account? <a href="/register" className="!text-green-600 font-bold hover:!underline !no-underline">Register here</a>
                 </p>
             </div>
         </div>

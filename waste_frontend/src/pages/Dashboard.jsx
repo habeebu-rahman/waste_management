@@ -42,20 +42,65 @@ export function Dashboard() {
 
             {/* --- SCHEDULES PANEL --- */}
             {activeTab === 'schedules' && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {schedules.length === 0 && <p className="text-slate-400 italic">No schedules available.</p>}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {schedules.length === 0 && (
+                        <div className="col-span-full py-20 text-center">
+                            <p className="text-slate-400 italic font-medium">No collection schedules found for your area.</p>
+                        </div>
+                    )}
+                    
                     {schedules.map((item) => (
-                        <div key={item.id} className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
-                            <div className="bg-blue-50 p-3 rounded-xl text-2xl">📅</div>
-                            <div>
-                                <p className="text-xs font-black text-blue-500 uppercase">{item.waste_type}</p>
-                                <h4 className="font-bold text-slate-700">Ward {item.ward}, {item.panchayath_name}</h4>
-                                <p className="text-sm text-slate-500">Collector: {item.collector_name || 'Not Assigned'}</p>
+                        <div 
+                            key={item.id} 
+                            className="group relative bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 hover:shadow-xl hover:shadow-blue-500/5 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+                        >
+                            {/* Top Row: Category Tag & Date */}
+                            <div className="flex justify-between items-start mb-6">
+                                <span className="px-3 py-1 bg-blue-50 text-[10px] font-black text-blue-600 uppercase tracking-widest rounded-full border border-blue-100">
+                                    {item.category_name}
+                                </span>
+                                <div className="text-right">
+                                    <p className="text-2xl font-black text-slate-900 leading-none">
+                                        {new Date(item.date).toLocaleDateString('en-IN', { day: 'numeric' })}
+                                    </p>
+                                    <p className="text-xs font-bold text-slate-400 uppercase">
+                                        {new Date(item.date).toLocaleDateString('en-IN', { month: 'short' })}
+                                    </p>
+                                </div>
                             </div>
-                            <div className="text-right">
-                                <p className="text-lg font-black text-slate-800">{new Date(item.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</p>
-                                <p className="text-xs font-bold text-slate-400">2026</p>
+
+                            {/* Middle: Main Location Info */}
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="h-12 w-12 bg-slate-50 rounded-2xl flex items-center justify-center text-xl group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                                    📍
+                                </div>
+                                <div>
+                                    <h4 className="font-black text-slate-800 text-lg leading-tight">
+                                        Ward {item.ward_number}
+                                    </h4>
+                                    <p className="text-sm font-medium text-slate-500 capitalize">
+                                        {item.panchayath_name}, {item.district_name}
+                                    </p>
+                                </div>
                             </div>
+
+                            {/* Bottom: Staff Assignment */}
+                            <div className="pt-4 border-t border-slate-50 flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px]">
+                                        👤
+                                    </div>
+                                    <p className="text-xs font-bold text-slate-400 uppercase tracking-tighter">
+                                        Collector
+                                    </p>
+                                </div>
+                                <p className="text-sm font-black text-slate-700">
+                                    {item.collector_name || 'Unassigned'}
+                                </p>
+                            </div>
+                            
+                            {/* Subtle Gradient Accent */}
+                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-[2px] bg-gradient-to-r from-transparent via-blue-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         </div>
                     ))}
                 </div>

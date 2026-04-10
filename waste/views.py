@@ -102,8 +102,11 @@ class CollectionScheduleViewSet(viewsets.ModelViewSet):
         user = self.request.user
         
         # 1. Admins and Collectors see all upcoming schedules
-        if user.role in ['admin', 'collector'] or user.is_staff:
+        if user.role in 'admin' or user.is_staff:
             return COLLECTION_SCHEDULE.objects.all().order_by('date')
+        
+        if user.role == 'collector':
+            return COLLECTION_SCHEDULE.objects.filter(collector=user)
         
         # 2. Citizens only see schedules matching their specific location
         return COLLECTION_SCHEDULE.objects.filter(
