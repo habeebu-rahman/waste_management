@@ -121,7 +121,7 @@ export function ComplaintRegister() {
                                 </GoogleMap> */}
                             </LoadScript>
                         </div>
-                        <button className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 rounded-2xl shadow-lg shadow-blue-100 transition-transform active:scale-95">
+                        <button className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-extrabold py-4 !rounded-2xl !shadow-lg !shadow-green-500/40 transition-transform active:scale-95">
                             SUBMIT COMPLAINT
                         </button>
                     </div>

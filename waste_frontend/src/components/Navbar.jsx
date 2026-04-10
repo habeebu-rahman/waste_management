@@ -1,9 +1,13 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate,useLocation } from "react-router-dom";
 import { useState } from "react";
 
 export function AppNavbar() {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
+
+    const location = useLocation();
+    const activeLink = "!text-green-500 !font-bold";
+    const inactiveLink = "!text-slate-300 hover:!text-green-500";
 
     // const token = localStorage.getItem('token'); 
     const role = localStorage.getItem('role');
@@ -11,6 +15,7 @@ export function AppNavbar() {
     const logout = () => {
         localStorage.clear();
         navigate('/login');
+        setIsOpen(false)
     };
 
     return (
@@ -19,23 +24,23 @@ export function AppNavbar() {
                 
                 {/* 1. BRAND - No underline, custom colors */}
                 <Link to="/" className="flex items-center gap-2 !no-underline group">
-                    <div className="bg-green-500 p-1.5 rounded-lg shadow-lg group-hover:rotate-12 transition-transform">
-                        <span className="text-xl">♻️</span>
+                    <div className="bg-green-500 p-1.5 rounded-lg shadow-lg group-hover:rotate-180 transition-transform duration-[1500ms] ease-in-out">
+                        <span className="text-2xl">♻️</span>
                     </div>
-                    <span className="text-2xl font-black tracking-tighter text-white">
-                        KL<span className="text-green-500">eeno</span>
+                    <span className="text-3xl font-black text-white">
+                        KL<span className="text-green-500 ">een</span>
                     </span>
                 </Link>
 
                 {/* 2. DESKTOP MENU - Clean spacing, no underlines */}
                 <div className="hidden md:flex items-center gap-8">
-                    <Link to="/" className="!text-slate-300 hover:!text-white focus:!text-white font-medium !no-underline transition-all hover:-translate-y-0.5">
+                    <Link to="/" className={`${location.pathname === "/" ? activeLink : inactiveLink} font-medium !no-underline transition-all hover:-translate-y-0.5`} >
                         Home
                     </Link>
                     
                     {!role ? (
                         <div className="flex items-center gap-4">
-                            <Link to="/login" className="!text-slate-300 hover:!text-green-500 focus:!text-green-500 !no-underline font-medium px-4 py-2 rounded-lg hover:bg-slate-800 transition-colors">
+                            <Link to="/login" className={`${location.pathname === "/login" ? activeLink : inactiveLink} !no-underline font-medium px-4 py-2 rounded-lg hover:bg-slate-800 transition-colors`}>
                                 Login
                             </Link>
                             <Link to="/register" className="bg-green-600 hover:!bg-green-500 text-white !no-underline font-bold px-6 py-2 rounded-full shadow-lg transition-all active:scale-95">
@@ -46,25 +51,25 @@ export function AppNavbar() {
                         <div className="flex items-center gap-6">
                             {role === "citizen" && 
                             <>
-                                <Link to="/request" className="!text-slate-300 hover:!text-green-500 focus:!text-green-500 !no-underline font-medium">Report Issue</Link>
-                                <Link to="/complaint" className="!text-slate-300 hover:!text-green-500 focus:!text-green-500 !no-underline font-medium">complaint Issue</Link>
+                                <Link to="/request" className={`${location.pathname === "/request" ? activeLink : inactiveLink} !no-underline font-medium`}>Schedule Pickup</Link>
+                                <Link to="/complaint" className={`${location.pathname === "/complaint" ? activeLink : inactiveLink} !no-underline font-medium`}>Report Issue</Link>
                             </>
                             }
                             {role === "admin" && 
                             <>
-                                <Link to="/admin" className="!text-slate-300 hover:!text-green-500 focus:!text-green-500 font-bold !no-underline">Admin Panel</Link>
-                                <Link to="/collection_schedule" className="!text-slate-300 hover:!text-green-500 focus:!text-green-500 font-bold !no-underline">Collection Schedule</Link>
+                                <Link to="/admin" className={`${location.pathname === "/admin" ? activeLink : inactiveLink} font-bold `}>Admin Panel</Link>
+                                <Link to="/collection_schedule" className={`${location.pathname === "/collection_schedule" ? activeLink : inactiveLink} font-bold `}>Collection Schedule</Link>
                             </>
                             }
-                            {role === "collector" && <Link to="/collector" className="!text-slate-300 hover:!text-green-500 focus:!text-green-500 font-bold !no-underline">Collector Portal</Link>}
+                            {role === "collector" && <Link to="/collector" className={`${location.pathname === "/collector" ? activeLink : inactiveLink} font-bold `}>Collector Portal</Link>}
 
-                            <Link to="/profile" className="!text-slate-300 hover:!text-green-500 focus:!text-green-500 font-medium !no-underline transition-all hover:-translate-y-0.5">
+                            <Link to="/profile" className={`${location.pathname === "/profile" ? activeLink : inactiveLink} font-medium !no-underline transition-all hover:-translate-y-0.5`}>
                                 profile
                             </Link>
                             
                             <button 
                                 onClick={logout}
-                                className="bg-blue-900 hover:bg-blue-800 text-white px-3 py-2 !rounded-lg font-bold !text-xs uppercase tracking-widest shadow-lg transition-all active:scale-95"
+                                className="bg-green-800 hover:bg-red-800 text-white px-3 py-2 !rounded-lg font-bold uppercase tracking-widest shadow-lg transition-all active:scale-95"
                             >
                                 Logout
                             </button>
@@ -84,24 +89,29 @@ export function AppNavbar() {
             {/* 4. MOBILE MENU */}
             {isOpen && (
                 <div className="md:hidden mt-4 flex flex-col gap-2 animate-in fade-in slide-in-from-top-4">
-                    <Link to="/" className="!text-slate-300 hover:!text-white focus:!text-white py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline" onClick={() => setIsOpen(false)}>Home</Link>
+                    <Link to="/" className={`${location.pathname === "/" ? activeLink : inactiveLink} py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline `} onClick={() => setIsOpen(false)}>Home</Link>
                     {role ? (
                         <>
                         {role === "citizen" && 
                         <>
-                            <Link to="/request" className="!text-slate-300 hover:!text-green-500 focus:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline">Report Issue</Link>
-                            <Link to="/complaint" className="!text-slate-300 hover:!text-green-500 focus:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline">complaint Issue</Link>
+                            <Link to="/request" className={`${location.pathname === "/request" ? activeLink : inactiveLink} py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline`} onClick={() => setIsOpen(false)}>Schedule Pickup</Link>
+                            <Link to="/complaint" className={`${location.pathname === "/complaint" ? activeLink : inactiveLink} py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline`} onClick={() => setIsOpen(false)}>Report Issue</Link>
                         </>
                         }
-                        {role === "admin" && <Link to="/admin" className="!text-slate-300 hover:!text-green-500 focus:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline">Admin Panel</Link>}
-                        {role === "collector" && <Link to="/collector" className="!text-slate-300 hover:!text-green-500 focus:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline">Collector Portal</Link>}
+                        {role === "admin" && 
+                        <>
+                            <Link to="/admin" className={`${location.pathname === "/admin" ? activeLink : inactiveLink} py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline`} onClick={() => setIsOpen(false)}>Admin Panel</Link>
+                            <Link to="/collection_schedule" className={`${location.pathname === "/collection_schedule" ? activeLink : inactiveLink} font-bold !no-underline`} onClick={() => setIsOpen(false)}>Collection Schedule</Link>
+                        </>
+                        }
+                        {role === "collector" && <Link to="/collector" className={`${location.pathname === "/collector" ? activeLink : inactiveLink} py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline`} onClick={() => setIsOpen(false)}>Collector Portal</Link>}
 
-                        <Link to="/profile" className="!text-slate-300 hover:!text-green-500 focus:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline" onClick={() => setIsOpen(false)}>profile</Link>
-                        <button onClick={logout} className="bg-rose-600 text-white p-3 rounded-lg w-full font-bold mt-2">Logout</button>
+                        <Link to="/profile" className={`${location.pathname === "/profile" ? activeLink : inactiveLink} py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline `} onClick={() => setIsOpen(false)}>profile</Link>
+                        <button onClick={logout} className="bg-green-800 hover:bg-red-800 text-white p-3 !rounded-lg w-full font-bold mt-2">Logout</button>
                         </>
                     ) : (
                         <>
-                            <Link to="/login" className="!text-slate-300 hover:!text-green-500 focus:!text-green-500 py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline" onClick={() => setIsOpen(false)}>Login</Link>
+                            <Link to="/login" className={`${location.pathname === "/login" ? activeLink : inactiveLink} py-3 px-4 rounded-lg hover:bg-slate-800 !no-underline`} onClick={() => setIsOpen(false)}>Login</Link>
                             <Link to="/register" className="bg-green-600 hover:!bg-green-500 focus:!text-green-500 text-white py-3 px-4 rounded-lg text-center font-bold !no-underline mt-2" onClick={() => setIsOpen(false)}>Register</Link>
                         </>
                     )}

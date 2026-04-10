@@ -290,7 +290,7 @@ export function Register() {
                     <button 
                         type="submit" 
                         disabled={loading}
-                        className={`w-full py-4 !rounded-2xl font-black text-white !shadow-xl !transition-all active:scale-95 ${
+                        className={`w-full py-4 !rounded-2xl font-black text-white !shadow-lg !shadow-green-500/40 !transition-all active:scale-95 ${
                             loading ? 'bg-slate-300' : 'bg-green-600 hover:bg-green-700 shadow-green-100'
                         }`}
                     >

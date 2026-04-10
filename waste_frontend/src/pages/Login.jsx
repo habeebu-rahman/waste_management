@@ -98,8 +98,8 @@ export function Login() {
                     {/* Login Button */}
                     <button 
                         disabled={loading}
-                        className={`w-full py-3 !rounded-xl font-bold text-white shadow-lg transition-all active:scale-95 flex justify-center items-center gap-2 ${
-                            loading ? 'bg-slate-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'
+                        className={`w-full py-3 !rounded-xl font-bold text-white !shadow-lg !shadow-green-500/40 transition-all active:scale-95 flex justify-center items-center gap-2 ${
+                            loading ? 'bg-green-600 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'
                         }`}
                     >
                         {loading ? 'Authenticating...' : 'Sign In'}

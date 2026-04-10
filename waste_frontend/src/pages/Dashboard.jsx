@@ -4,7 +4,12 @@ import API from "../api/api";
 export function Dashboard() {
     const [schedules, setSchedules] = useState([]);
     const [request, setRequest] = useState([]);
+    const [complaints, setComplaints] = useState([]);
     const [activeTab, setActiveTab] = useState('schedules');
+
+    const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+    const role = localStorage.getItem('role');
 
     useEffect(() => {
         // Fetch universal schedules
@@ -15,6 +20,13 @@ export function Dashboard() {
         // Fetch user-specific requests
         API.get(`waste/requests/`)
             .then(res => setRequest(res.data));
+
+        API.get(`waste/complaint/`)
+            .then(res => setComplaints(res.data));
+
+        // API.get(`auth/me/`)
+        //     .then(res => setUser(res.data));
+
     }, []);
 
     return (
@@ -28,16 +40,22 @@ export function Dashboard() {
             <div className="flex gap-6 mb-8 border-b border-slate-200">
                 <button 
                     onClick={() => setActiveTab('schedules')}
-                    className={`pb-3 px-2 font-bold transition-all ${activeTab === 'schedules' ? 'border-b-4 border-blue-600 text-blue-600' : 'text-slate-400'}`}
+                    className={`pb-3 px-2 font-bold transition-all ${activeTab === 'schedules' ? 'border-b-4 border-green-400 text-green-400' : 'text-slate-400'}`}
                 >
                     Collection Schedules
                 </button>
                 <button 
                     onClick={() => setActiveTab('requests')}
-                    className={`pb-3 px-2 font-bold transition-all ${activeTab === 'requests' ? 'border-b-4 border-green-600 text-green-600' : 'text-slate-400'}`}
+                    className={`pb-3 px-2 font-bold transition-all ${activeTab === 'requests' ? 'border-b-4 border-green-500 text-green-500' : 'text-slate-400'}`}
                 >
                     My Requests ({request.length})
                 </button>
+                {role ==='citizen' && <button 
+                    onClick={() => setActiveTab('complaints')}
+                    className={`pb-3 px-2 font-bold transition-all ${activeTab === 'complaints' ? 'border-b-4 border-green-600 text-green-600' : 'text-slate-400'}`}
+                >
+                    My Reports ({complaints.length})
+                </button>}
             </div>
 
             {/* --- SCHEDULES PANEL --- */}
@@ -118,7 +136,7 @@ export function Dashboard() {
                         <div key={req.id} className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div className="flex items-start gap-4">
                                 <div className={`p-3 rounded-xl ${req.status === 'completed' ? 'bg-green-50' : 'bg-orange-50'}`}>
-                                    {req.status === 'completed' ? '✅' : '⏳'}
+                                    {req.status === 'completed' ? '✅' : req.status === 'pending' ? '⏳':'🏷️'}
                                 </div>
                                 <div>
                                     <div className="flex items-center gap-2">
@@ -143,6 +161,53 @@ export function Dashboard() {
                             <div className="text-right border-t md:border-t-0 pt-3 md:pt-0">
                                 <p className="text-[10px] font-bold text-slate-400 uppercase">Request ID</p>
                                 <p className="font-mono text-sm text-slate-600">#00{req.id}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            {/* complaints panel */}
+            {activeTab === 'complaints' && (
+                <div className="space-y-4">
+                    {complaints.length === 0 && (
+                        <div className="text-center py-12 bg-white rounded-3xl border-2 border-dashed border-slate-200">
+                            <p className="text-slate-400 font-medium">You haven't sent any pickup requests yet.</p>
+                        </div>
+                    )}
+                    {complaints.map(comp => (
+                        <div key={comp.id} className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div className="flex items-start gap-4">
+                                <div className={`p-3 rounded-xl ${comp.status === 'completed' ? 'bg-green-50' : 'bg-orange-50'}`}>
+                                    {comp.status === 'completed' ? '✅' : comp.status === 'pending' ? '⏳':'🏷️'}
+                                </div>
+                                <div>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-xs font-black bg-slate-100 text-slate-600 px-2 py-0.5 rounded uppercase tracking-tighter">
+                                            {comp.category_name}
+                                        </span>
+                                        <span className={`text-[10px] font-black px-2 py-0.5 rounded uppercase ${
+                                            comp.status === 'completed' ? 'bg-green-100 text-green-700' : 
+                                            comp.status === 'assigned' ? 'bg-blue-100 text-blue-700' : 
+                                            'bg-orange-100 text-orange-700'
+                                        }`}>
+                                            {comp.status}
+                                        </span>
+                                    </div>
+                                    <h3 className="font-bold text-slate-800 mt-1">{comp.place}</h3>
+                                </div>
+                            </div>
+                            <div>
+                                <img 
+                                    src={comp.image ? (comp.image.startsWith('http') ? comp.image : `${BASE_URL}${comp.image}`) : "https://placehold.co/100"} 
+                                    className="w-20 h-20 rounded-lg object-cover shadow-sm"
+                                    alt="Waste"
+                                />
+                            </div>
+                            
+                            <div className="text-right border-t md:border-t-0 pt-3 md:pt-0">
+                                <p className="text-[10px] font-bold text-slate-400 uppercase">complaint ID</p>
+                                <p className="font-mono text-sm text-slate-600">#00{comp.id}</p>
                             </div>
                         </div>
                     ))}

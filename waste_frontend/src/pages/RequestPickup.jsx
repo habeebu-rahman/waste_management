@@ -89,11 +89,11 @@ export function RequestPickup() {
                             className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none"
                             onChange={(e) => setFormRequest({ ...formRequest, preferred_date: e.target.value })} 
                         />
-                        <p className="text-[10px] text-slate-400 mt-2 italic font-medium">*Pickups must be scheduled at least 48 hours in advance.</p>
+                        <p className="text-[10px] text-slate-400 mt-2 italic font-medium">*Pickups must be scheduled at least 2 days in advance.</p>
                     </div>
 
                     {/* Submit Button */}
-                    <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 rounded-2xl shadow-lg shadow-blue-100 transition-all active:scale-95 mt-4">
+                    <button className="w-full bg-green-700 hover:bg-green-600 !shadow-lg !shadow-green-500/40 text-white font-extrabold py-4 !rounded-2xl  transition-all active:scale-95 mt-4">
                         REQUEST PICKUP
                     </button>
                 </form>

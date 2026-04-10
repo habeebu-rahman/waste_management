@@ -178,10 +178,10 @@ export function Profile() {
             <div className="max-w-4xl mx-auto">
                 
                 {/* --- HEADER / COVER --- */}
-                <div className="relative h-48 bg-gradient-to-r from-blue-600 to-indigo-700 rounded-t-3xl shadow-lg">
+                <div className="relative bg-green-800 h-48 bg-gradient-to-r from-green-700 to-blue-950 rounded-t-3xl shadow-lg">
                     <div className="absolute -bottom-16 left-8 flex items-end gap-6">
                         <div className="w-32 h-32 bg-white rounded-3xl p-1 shadow-xl">
-                            <div className="w-full h-full bg-slate-200 rounded-2xl flex items-center justify-center text-4xl border-4 border-white">
+                            <div className="w-full h-full bg-slate-300 rounded-2xl flex items-center justify-center text-4xl border-4 border-white">
                                 👤
                             </div>
                             {/* {isEditing && (
@@ -192,7 +192,7 @@ export function Profile() {
                         </div>
                         <div className="mb-2">
                             <h1 className="text-3xl font-black text-white drop-shadow-md">{user.username}</h1>
-                            <p className="text-blue-100 font-bold uppercase tracking-widest text-xs">
+                            <p className="!text-green-500 font-bold uppercase tracking-widest text-xs drop-shadow-md">
                                 {user.role || 'Member'} • Joined 2026
                             </p>
                         </div>
@@ -238,7 +238,7 @@ export function Profile() {
                                 <h3 className="text-lg font-black text-slate-800">Personal Information</h3>
                                 <button 
                                     onClick={() => setIsEditing(!isEditing)}
-                                    className={`text-xs font-black px-4 py-2 rounded-xl transition-all ${isEditing ? 'bg-slate-100 text-slate-500' : 'bg-blue-50 text-blue-600 hover:bg-blue-100'}`}
+                                    className={`text-xs font-black px-4 py-2 !rounded-xl transition-all ${isEditing ? 'bg-slate-100 text-slate-500' : 'bg-blue-50 text-blue-600 hover:bg-blue-100'}`}
                                 >
                                     {isEditing ? 'CANCEL' : 'EDIT PROFILE'}
                                 </button>
@@ -306,9 +306,9 @@ export function Profile() {
                                         {isPhoneVerified && <p className="text-green-600 text-xs font-bold mt-2 flex items-center gap-1">✓ Verified Phone no</p>}
                                     </div>
                                     {/* Role (Read Only) */}
-                                    <div className="mt-5">
-                                        <label className="block text-[10px] font-black text-slate-400 uppercase">Assigned Role</label>
-                                        <p className="py-1 px-2 ml-2 bg-slate-100 rounded-xl text-slate-500 font-black text-xs uppercase inline-block">
+                                    <div className="mt-4">
+                                        <label className="block text-[10px] font-black text-slate-400 uppercase mt-7">Assigned Role</label>
+                                        <p className="py-2 px-3 ml-2 bg-slate-100 rounded-xl text-slate-500 font-black text-xs uppercase inline-block">
                                             {user.role}
                                         </p>
                                     </div>
@@ -355,7 +355,7 @@ export function Profile() {
                                 )}
 
                                 {isEditing && (
-                                    <button type="submit" disabled={loading} className="w-full bg-blue-600 text-white font-black py-4 rounded-2xl shadow-lg shadow-blue-100 hover:scale-[1.02] active:scale-95 transition-all">
+                                    <button type="submit" disabled={loading} className="w-full bg-green-700 hover:bg-green-600 !shadow-lg !shadow-green-500/40 text-white font-black py-4 !rounded-2xl shadow-lg shadow-blue-100 hover:scale-[1.02] active:scale-95 transition-all">
                                         {loading ? 'Saving Changes...' : 'SAVE CHANGES'}
                                     </button>
                                 )}
