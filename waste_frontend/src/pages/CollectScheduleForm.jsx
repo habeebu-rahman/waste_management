@@ -111,7 +111,7 @@ export function CollectScheduleForm() {
                         </div>
 
                         <div className="flex flex-col gap-2">
-                            <label className="text-[10px] font-black text-slate-400 uppercase">Panchayath</label>
+                            <label className={`text-[10px] font-black text-slate-400 uppercase`}>Panchayath</label>
                             <select 
                                 required
                                 disabled={!form.district}
@@ -119,7 +119,7 @@ export function CollectScheduleForm() {
                                 onChange={handlePanchayathChange}
                                 value={form.panchayath}
                             >
-                                <option value="">Panchayath</option>
+                                <option value="">{form.district ? "Select Panchayath" : "Choose District First..."}</option>
                                 {panchayaths.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                             </select>
                         </div>
@@ -133,7 +133,7 @@ export function CollectScheduleForm() {
                                 onChange={(e) => setForm({...form, ward: e.target.value})}
                                 value={form.ward}
                             >
-                                <option value="">Ward Number</option>
+                                <option value="">{form.panchayath ? "Select Ward" : "Choose Panchayath First..."}</option>
                                 {wards.map(w => <option key={w.id} value={w.id}>Ward {w.number}</option>)}
                             </select>
                         </div>

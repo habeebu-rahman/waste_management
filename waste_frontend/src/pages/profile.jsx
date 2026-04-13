@@ -178,7 +178,7 @@ export function Profile() {
             <div className="max-w-4xl mx-auto">
                 
                 {/* --- HEADER / COVER --- */}
-                <div className="relative bg-green-800 h-48 bg-gradient-to-r from-green-700 to-blue-950 rounded-t-3xl shadow-lg">
+                <div className="relative bg-blue-900 h-48  rounded-t-3xl shadow-lg">
                     <div className="absolute -bottom-16 left-8 flex items-end gap-6">
                         <div className="w-32 h-32 bg-white rounded-3xl p-1 shadow-xl">
                             <div className="w-full h-full bg-slate-300 rounded-2xl flex items-center justify-center text-4xl border-4 border-white">
@@ -269,16 +269,17 @@ export function Profile() {
                                             onChange={(e) => setForm({...form, email: e.target.value})}
                                         />
                                         {(!isEmailVerified && isEditing) && (
-                                            <button type="button" onClick={() => sendOtp('email', form.email)} className="bg-slate-800 text-white px-4 rounded-lg text-sm font-bold hover:bg-slate-700 whitespace-nowrap">
+                                            <button type="button" onClick={() => sendOtp('email', form.email)} className="mt-1 bg-slate-800 text-white px-4 py-1 !rounded-lg text-sm font-bold hover:bg-slate-700 whitespace-nowrap">
                                                 {emailOtpSent ? "Resend" : "Get OTP"}
                                             </button>
                                         )}
-                                        {emailOtpSent && !isEmailVerified && (
+                                        {emailOtpSent && !isEmailVerified && isEditing &&(
                                             <div className="flex gap-2 mt-2 animate-in slide-in-from-top-2">
                                                 <input className={inputClass()} placeholder="Enter 6-digit OTP" onChange={(e) => setEmailOtp(e.target.value)} />
-                                                <button type="button" onClick={() => verifyOtp('email', emailOtp)} className="bg-green-600 text-white px-6 rounded-lg font-bold">Verify</button>
+                                                <button type="button" onClick={() => verifyOtp('email', emailOtp)} className="bg-green-600 text-white px-6 !rounded-lg font-bold">Verify</button>
                                             </div>
                                         )}
+                                        <ErrorLabel field="email" />
                                         {isEmailVerified ? <p className="text-green-600 text-xs font-bold mt-2 flex items-center gap-1">✓ Verified Email ID</p> :
                                         emailOtpInvalid && <p className="text-red-600 text-xs font-bold mt-2 flex items-center gap-1">✘ OTP is wrong</p>}
                                     </div>
@@ -292,16 +293,17 @@ export function Profile() {
                                             onChange={(e) => setForm({...form, phone: e.target.value})}
                                         />
                                         {(!isPhoneVerified && isEditing) && (
-                                            <button type="button" onClick={() => sendOtp('phone', form.phone)} className="bg-slate-800 text-white px-4 rounded-lg text-sm font-bold hover:bg-slate-700 whitespace-nowrap">
+                                            <button type="button" onClick={() => sendOtp('phone', form.phone)} className="mt-1 bg-slate-800 text-white px-4 py-1 !rounded-lg text-sm font-bold hover:bg-slate-700 whitespace-nowrap">
                                                 {phoneOtpSent ? "Resend" : "Get OTP"}
                                             </button>
                                         )}
-                                        {phoneOtpSent && !isPhoneVerified &&  (
+                                        {phoneOtpSent && !isPhoneVerified && isEditing && (
                                             <div className="flex gap-2 mt-2">
                                                 <input className={inputClass()} placeholder="Enter OTP" onChange={(e) => setPhoneOtp(e.target.value)} />
-                                                <button type="button" onClick={() => verifyOtp('phone', phoneOtp)} className="bg-green-600 text-white px-6 rounded-lg font-bold">Verify</button>
+                                                <button type="button" onClick={() => verifyOtp('phone', phoneOtp)} className="bg-green-600 text-white px-6 !rounded-lg font-bold">Verify</button>
                                             </div>
                                         )}
+                                        <ErrorLabel field="phone" />
                                         {phoneOtpInvalid && <p className="text-red-600 text-xs font-bold mt-2 flex items-center gap-1">✘ OTP is wrong</p>}
                                         {isPhoneVerified && <p className="text-green-600 text-xs font-bold mt-2 flex items-center gap-1">✓ Verified Phone no</p>}
                                     </div>
@@ -334,14 +336,14 @@ export function Profile() {
                                         </div>
                                         <div>
                                             <select className={inputClass('panchayath')} onChange={handlePanchayathChange} disabled={!form.district}>
-                                                <option value="">Select Panchayath</option>
+                                                <option value="">{form.district ? "Select Panchayath" : "Choose District First..."}</option>
                                                 {panchayaths.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
                                             </select>
                                             <ErrorLabel field="panchayath" />
                                         </div>
                                         <div>
                                             <select className={inputClass('ward')} onChange={(e) => { setForm({ ...form, ward: Number(e.target.value) }); setErrors({...errors, ward:''}) }} disabled={!form.panchayath}>
-                                                <option value=""> Select Ward</option>
+                                                <option value=""> {form.panchayath ? "Select Ward" : "Choose Panchayath First..."}</option>
                                                 {wards.map((w) => <option key={w.id} value={w.id}>Ward {w.number}</option>)}
                                             </select>
                                             <ErrorLabel field="ward" />
@@ -369,6 +371,9 @@ export function Profile() {
                                 <p className="text-indigo-200 text-sm leading-relaxed max-w-xs">
                                     By using this platform, you've helped correctly dispose of {stats.requests * 50 + stats.complaints * 25}kg of waste this month. Keep it up!
                                 </p>
+                            </div>
+                            <div className="absolute top-[45%] left-[-5%] text-8xl opacity-15 rotate-20">
+                                ♻️
                             </div>
                             <div className="absolute top-[-20%] right-[-10%] text-9xl opacity-10 rotate-12">
                                 🌿

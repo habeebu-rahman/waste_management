@@ -77,13 +77,17 @@ export function CollectorDashboard() {
                                     Status: <span className={`text-xs mt-2 font-bold uppercase ${req.status === 'completed' ? 'text-green-500' : 'text-blue-500'}`}>{req.status}</span>
                                 </p>
                             </div>
-                            {req.status !== 'completed' && (
+                            {req.status !== 'completed' ? (
                                 <button 
                                     onClick={() => markCompleted(req.id, "request")} 
-                                    className="bg-green-600 hover:bg-green-700 text-white font-bold px-8 py-3 rounded-xl shadow-lg shadow-green-100 transition-transform active:scale-95"
+                                    className="bg-green-600 hover:bg-green-700 text-white font-bold px-8 py-3 !rounded-xl !shadow-lg !shadow-green-400/40 transition-transform active:scale-95"
                                 >
                                     Mark Done
                                 </button>
+                            ):(
+                                <div className="mt-6 bg-green-50 text-green-700 text-center py-3 px-5 rounded-2xl font-black uppercase text-sm border border-green-100">
+                                    Done
+                                </div>
                             )}
                         </div>
                     ))}
@@ -99,10 +103,9 @@ export function CollectorDashboard() {
                                 <div className="flex flex-col justify-between">
                                     <div className="flex gap-5">
                                         <img 
-                                            src={comp.image ? `${BASE_URL}${comp.image}` : PLACEHOLDER} 
-                                            alt="Waste" 
-                                            className="w-28 h-28 rounded-2xl object-cover border-4 border-slate-50 shadow-sm"
-                                            onError={(e) => { e.target.src = PLACEHOLDER; }}
+                                            src={comp.image ? (comp.image.startsWith('http') ? comp.image : `${BASE_URL}${comp.image}`) : "https://placehold.co/100"} 
+                                            className="w-20 h-20 rounded-lg object-cover shadow-sm"
+                                            alt="Waste"
                                         />
                                         <div>
                                             <span className="text-[10px] font-black bg-red-100 text-red-600 px-2 py-1 rounded uppercase tracking-widest">{comp.category_name}</span>
@@ -111,14 +114,14 @@ export function CollectorDashboard() {
                                         </div>
                                     </div>
 
-                                    <div className="mt-6 bg-slate-50 p-4 rounded-2xl border border-dashed border-slate-200">
+                                    <div className="mt-6 bg-slate-50 py-2 px-4 rounded-2xl border !border-dashed border-slate-200 ">
                                         <p className="text-slate-700 text-sm"><strong>Reported at:</strong> {comp.place}</p>
                                     </div>
 
                                     {comp.status !== 'completed' ? (
                                         <button 
                                             onClick={() => markCompleted(comp.id, "complaint")} 
-                                            className="mt-6 bg-slate-900 hover:bg-black text-white font-bold py-4 rounded-2xl transition-all active:scale-95 shadow-xl shadow-slate-200"
+                                            className="!mt-6 bg-green-600 hover:bg-green-700 text-white font-bold py-3 !rounded-2xl transition-all active:scale-95 !shadow-lg !shadow-green-400/40"
                                         >
                                             Complete Job
                                         </button>

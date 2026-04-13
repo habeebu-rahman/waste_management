@@ -268,14 +268,14 @@ export function Register() {
                             </div>
                             <div>
                                 <select className={inputClass('panchayath')} onChange={handlePanchayathChange} disabled={!form.district}>
-                                    <option value="">Select Panchayath</option>
+                                    <option value="">{form.district ? "Select Panchayath" : "Choose District First..."}</option>
                                     {panchayaths.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
                                 </select>
                                 <ErrorLabel field="panchayath" />
                             </div>
                             <div>
                                 <select className={inputClass('ward')} onChange={(e) => { setForm({ ...form, ward: Number(e.target.value) }); setErrors({...errors, ward:''}) }} disabled={!form.panchayath}>
-                                    <option value="">Select Ward</option>
+                                    <option value="">{form.panchayath ? "Select Ward" : "Choose Panchayath First..."}</option>
                                     {wards.map((w) => <option key={w.id} value={w.id}>Ward {w.number}</option>)}
                                 </select>
                                 <ErrorLabel field="ward" />

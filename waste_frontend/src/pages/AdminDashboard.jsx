@@ -71,24 +71,34 @@ export function AdminDashboard() {
                                 <h3 className="font-bold text-lg mt-1">{req.user_name}</h3>
                                 <p className="text-sm text-gray-500">📍 {req.address}</p>
                                 <p className="text-xs mt-2 font-bold uppercase">
-                                    Status: <span className={`text-xs mt-2 font-bold uppercase ${req.status === 'completed' ? 'text-green-500' : 'text-blue-500'}`}>{req.status}</span>
+                                    Status: <span className={`text-xs mt-2 font-bold uppercase ${req.status === 'completed' ? 'text-green-500' :req.status === 'assigned' ? 'text-blue-500':'text-red-500'}`}>{req.status}</span>
                                 </p>
                             </div>
                             <div className="flex items-center gap-3">
-                                <select 
-                                    className="border rounded p-2 text-sm"
-                                    onChange={(e) => handleSelectChange(req.id, e.target.value)}
-                                    value={selectedCollectors[req.id] || ""}
-                                >
-                                    <option value="">Select Collector</option>
-                                    {collectors.map(col => <option key={col.id} value={col.id}>{col.username}</option>)}
-                                </select>
-                                <button 
-                                    onClick={() => assignCollector(req.id, selectedCollectors[req.id], "request")}
-                                    className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700"
-                                >
-                                    Assign
-                                </button>
+                                {req.status === 'pending' ?(
+                                    <>
+                                    <select 
+                                        className="border rounded p-2 text-sm"
+                                        onChange={(e) => handleSelectChange(req.id, e.target.value)}
+                                        value={selectedCollectors[req.id] || ""}
+                                    >
+                                        <option value="">Select Collector</option>
+                                        {collectors.map(col => <option key={col.id} value={col.id}>{col.username}</option>)}
+                                    </select>
+                                
+                                    <button 
+                                        onClick={() => assignCollector(req.id, selectedCollectors[req.id], "request")}
+                                        className="bg-blue-600 text-white px-4 py-2 !rounded-lg text-sm hover:bg-blue-700"
+                                    >
+                                        Assign
+                                    </button>
+                                    </>
+                                    ):(
+                                        <div className="mt-6 bg-green-50 text-green-700 text-center py-3 px-5 rounded-2xl font-black uppercase text-sm border border-green-100">
+                                            Done
+                                        </div>
+                                    )
+                                }
                             </div>
                         </div>
                     ))}
@@ -123,7 +133,7 @@ export function AdminDashboard() {
                                 </div>
 
                                 {/* Center: Map */}
-                                <div className="h-32 rounded-xl overflow-hidden border">
+                                <div className="h-40 rounded-xl overflow-hidden border">
                                     {/* <GoogleMap 
                                         center={{ lat: parseFloat(comp.latitude) || 0, lng: parseFloat(comp.longitude) || 0 }} 
                                         zoom={14}
@@ -147,12 +157,12 @@ export function AdminDashboard() {
                                     {comp.status !== 'completed' ? (
                                         <button 
                                             onClick={() => assignCollector(comp.id, selectedCollectors[comp.id], "complaint")} 
-                                            className="mt-6 bg-slate-900 hover:bg-black text-white font-bold py-4 rounded-2xl transition-all active:scale-95 shadow-xl shadow-slate-200"
+                                            className="mt-3 bg-slate-900 hover:bg-black text-white font-bold py-3 !rounded-2xl transition-all active:scale-95 shadow-xl shadow-slate-200"
                                         >
                                             Assign Collector
                                         </button>
                                     ) : (
-                                        <div className="mt-6 bg-green-50 text-green-700 text-center py-3 rounded-2xl font-black uppercase text-sm border border-green-100">
+                                        <div className="mt-2 bg-green-50 text-green-700 text-center py-3 rounded-2xl font-black uppercase text-sm border border-green-100">
                                             Assigned
                                         </div>
                                     )}

@@ -31,9 +31,10 @@ export function Login() {
             const role = userRes.data.role;
             localStorage.setItem('role', role);
 
-            if (role === 'admin') navigate('/admin');
-            else if (role === 'collector') navigate('/collector');
-            else navigate('/');
+            // if (role === 'admin') navigate('/');
+            // else if (role === 'collector') navigate('/');
+            // else 
+            navigate('/');
             
         } catch (err) {
             console.error(err);
