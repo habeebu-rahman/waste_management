@@ -76,3 +76,12 @@ class WASTE_COMPLAINT(models.Model):
 
     def __str__(self):
         return f'{self.user} - {self.category} - {self.status}'
+    
+class Payment(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    request_item = models.ForeignKey(WASTE_REQUEST, on_delete=models.CASCADE) # Link to your request
+    order_id = models.CharField(max_length=100)
+    payment_id = models.CharField(max_length=100, blank=True, null=True)
+    amount = models.FloatField()
+    status = models.CharField(max_length=20, default='Pending') # Pending, Success, Failed
+    created_at = models.DateTimeField(auto_now_add=True)
