@@ -1,6 +1,8 @@
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { useState, useEffect } from 'react';
 import API from '../api/api';
+import { Footer } from '../components/Footer';
+import Swal from "sweetalert2";
 
 export function ComplaintRegister() {
     const [location, setLocation] = useState({ lat: 11.2588, lng: 75.7804 });
@@ -38,7 +40,15 @@ export function ComplaintRegister() {
 
         try {
             await API.post("waste/complaint/", data);
-            alert("Complaint submitted successfully!");
+            Swal.fire({
+                title: 'submitted',
+                text: 'Complaint submitted successfully!',
+                icon: 'success',
+                background:'white',
+                showConfirmButton:true,
+                timer:1000,
+                timerProgressBar:true
+            })
             // Optional: reset form or redirect
         } catch (err) {
             console.log(err.response?.data);
@@ -47,6 +57,7 @@ export function ComplaintRegister() {
     };
 
     return (
+        <>
         <div className="min-h-screen bg-slate-50 p-6 flex justify-center items-center">
             <div className="bg-white p-8 rounded-3xl shadow-xl max-w-4xl w-full border border-slate-100">
                 <h2 className="text-3xl font-black text-slate-800 mb-2">Report Waste</h2>
@@ -96,8 +107,7 @@ export function ComplaintRegister() {
                                         <img src={preview} alt="Preview" className="h-full w-full object-cover rounded-2xl" />
                                     ) : (
                                         <div className="text-center">
-                                            <span className="text-4xl">📸</span>
-                                            <p className="text-sm text-slate-500 font-bold mt-2">Click to take a photo</p>
+                                            <p className="text-sm py-10 text-slate-500 font-bold mt-2">Click to take a photo</p>
                                         </div>
                                     )}
                                 </label>
@@ -128,5 +138,7 @@ export function ComplaintRegister() {
                 </form>
             </div>
         </div>
+        <Footer />
+        </>
     );
 }

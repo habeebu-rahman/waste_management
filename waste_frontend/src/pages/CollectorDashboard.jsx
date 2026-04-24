@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import API from "../api/api";
+import { Footer } from "../components/Footer";
 
 const BASE_URL = "http://127.0.0.1:8000"; 
 const PLACEHOLDER = "https://placehold.co/200x200?text=No+Image";
@@ -43,6 +44,7 @@ export function CollectorDashboard() {
     }
 
     return (
+        <>
         <div className="p-8 bg-slate-50 min-h-screen max-w-6xl mx-auto">
             <h1 className="text-3xl font-black text-slate-800 mb-8">Collector Panel</h1>
 
@@ -149,5 +151,7 @@ export function CollectorDashboard() {
                 </LoadScript>
             )}
         </div>
+        <Footer />
+        </>
     );
 }

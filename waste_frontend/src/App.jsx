@@ -12,6 +12,7 @@ import { Profile } from './pages/profile'
 import { CollectScheduleForm } from './pages/CollectScheduleForm'
 
 export default function App(){
+  
   return(
     <BrowserRouter>
     <AppNavbar />

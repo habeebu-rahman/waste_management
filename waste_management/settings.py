@@ -168,3 +168,16 @@ DJOSER = {
 
 RAZOR_KEY_ID = os.getenv('RAZOR_KEY_ID')
 RAZOR_KEY_SECRET = os.getenv('RAZOR_KEY_SECRET')
+
+
+# psql
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'waste_management',
+#         'USER': 'wasteadmin',
+#         'PASSWORD': os.getenv('DB_PASSWORD'),
+#         'HOST': '127.0.0.1',
+#         'PORT': '5432',
+#     }
+# }

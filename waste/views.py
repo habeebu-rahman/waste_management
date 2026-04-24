@@ -19,7 +19,7 @@ class WasteCategoryViewSet(viewsets.ModelViewSet):
     serializer_class = WasteCategorySerializer
     
 class WasteRequestViewSet(viewsets.ModelViewSet):
-    # We use select_related to optimize the database query for category/user names
+    # Keep the optimized queryset here for the base
     queryset = WASTE_REQUEST.objects.select_related('user', 'category').all()
     serializer_class = WasteRequestSerializer
     permission_classes = [IsAuthenticated]
@@ -27,19 +27,18 @@ class WasteRequestViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
 
-        # 1. Admins see EVERYTHING
+        # 1. Admins see EVERYTHING - Use .order_by('-id') instead of reversed()
         if user.role == 'admin' or user.is_staff:
-            return reversed(WASTE_REQUEST.objects.all())
+            return WASTE_REQUEST.objects.all().order_by('-id')
 
         # 2. Collectors see only what is assigned to them
         if user.role == 'collector':
-            return reversed(WASTE_REQUEST.objects.filter(collector=user))
+            return WASTE_REQUEST.objects.filter(collector=user).order_by('-id')
 
         # 3. Regular Users see only the requests THEY created
-        return reversed(WASTE_REQUEST.objects.filter(user=user))
+        return WASTE_REQUEST.objects.filter(user=user).order_by('-id')
 
     def perform_create(self, serializer):
-        # Automatically link the request to the logged-in user
         serializer.save(user=self.request.user)
         
         # send_mail(
@@ -69,14 +68,14 @@ class WasteComplaintViewSet(viewsets.ModelViewSet):
 
         # 1. Admins see EVERYTHING
         if user.role == 'admin' or user.is_staff:
-            return reversed(WASTE_COMPLAINT.objects.all())
+            return WASTE_COMPLAINT.objects.all().order_by('-id')
 
         # 2. Collectors see only what is assigned to them
         if user.role == 'collector':
-            return reversed(WASTE_COMPLAINT.objects.filter(collector=user))
+            return WASTE_COMPLAINT.objects.filter(collector=user).order_by('-id')
 
         # 3. Regular Users see only the requests THEY created
-        return reversed(WASTE_COMPLAINT.objects.filter(user=user))
+        return WASTE_COMPLAINT.objects.filter(user=user).order_by('-id')
     
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

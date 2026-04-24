@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import API from "../api/api";
 import { PaymentButton } from "../components/PaymentButton";
 import keralaData from "../api/kerala.json";
+import { Footer } from "../components/Footer";
+import { Link } from "react-router-dom";
 
 export function Dashboard() {
     const [schedules, setSchedules] = useState([]);
@@ -71,17 +73,19 @@ export function Dashboard() {
             item.district_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             item.panchayath_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             item.ward_number.toString().includes(searchTerm) ||
-            (item.collector_name && item.collector_name.toLowerCase().includes(searchTerm.toLowerCase()));
+            (item.collector_name && item.collector_name.toLowerCase().includes(searchTerm.toLowerCase()))||
+            (item.category_name && item.category_name.toLowerCase().includes(searchTerm.toLowerCase()));
 
         // 2. Filter Modal Logic (Using == to handle string/number differences)
         const matchesDistrict = filterValues.district ? item.district == filterValues.district : true;
-    const matchesPanchayath = filterValues.panchayath ? item.panchayath == filterValues.panchayath : true;
+        const matchesPanchayath = filterValues.panchayath ? item.panchayath == filterValues.panchayath : true;
         const matchesWard = filterValues.ward ? item.ward == filterValues.ward : true;
 
         return matchesSearch && matchesDistrict && matchesPanchayath && matchesWard;
     });
 
     return (
+        <>
         <div className="p-6 max-w-5xl mx-auto min-h-screen bg-slate-50">
             <header className="mb-8">
                 <h1 className="text-3xl font-black text-slate-800">My Dashboard</h1>
@@ -96,22 +100,26 @@ export function Dashboard() {
                 >
                     Collection Schedules
                 </button>
+                {role ==='citizen' && 
+                <>
                 <button 
                     onClick={() => setActiveTab('requests')}
                     className={`pb-3 px-2 font-bold transition-all ${activeTab === 'requests' ? 'border-b-4 border-green-500 text-green-500' : 'text-slate-400'}`}
                 >
                     My Requests ({request.length})
                 </button>
-                {role ==='citizen' && <button 
+                <button 
                     onClick={() => setActiveTab('complaints')}
                     className={`pb-3 px-2 font-bold transition-all ${activeTab === 'complaints' ? 'border-b-4 border-green-600 text-green-600' : 'text-slate-400'}`}
                 >
                     My Reports ({complaints.length})
-                </button>}
+                </button>
+                </>
+                }
             </div>
 
             {/* --- SCHEDULES PANEL --- */}
-            {role === 'admin' && activeTab === 'schedules' && (
+            {(role === 'admin'|| role==='collector') && activeTab === 'schedules' && (
                 <div className="flex flex-col md:flex-row gap-4 mb-6 items-center">
                     {/* Search Bar */}
                     <div className="relative flex-1 w-full">
@@ -140,7 +148,7 @@ export function Dashboard() {
                             }
                             setShowFilters(true);
                         }}
-                        className="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white !rounded-2xl font-bold hover:bg-slate-800 transition-all shadow-lg active:scale-95"
+                        className="flex items-center gap-2 px-6 py-3 bg-blue-900 text-white !rounded-2xl font-bold hover:bg-blue-800 transition-all shadow-lg active:scale-95"
                     >
                         {!(filterValues.district || filterValues.panchayath || filterValues.ward) && <span>✨</span>} Filter
                         {(filterValues.district || filterValues.panchayath || filterValues.ward) && (
@@ -291,7 +299,7 @@ export function Dashboard() {
                 <div className="space-y-4">
                     {request.length === 0 && (
                         <div className="text-center py-12 bg-white rounded-3xl border-2 border-dashed border-slate-200">
-                            <p className="text-slate-400 font-medium">You haven't sent any pickup requests yet.</p>
+                            <p className="text-slate-400 font-medium">You haven't sent any pickup requests yet.<br />you have pickup request ? <Link className="!text-green-400" to='/request'>click</Link></p> 
                         </div>
                     )}
                     {request.map(req => (
@@ -336,7 +344,7 @@ export function Dashboard() {
                 <div className="space-y-4">
                     {complaints.length === 0 && (
                         <div className="text-center py-12 bg-white rounded-3xl border-2 border-dashed border-slate-200">
-                            <p className="text-slate-400 font-medium">You haven't sent any pickup requests yet.</p>
+                            <p className="text-slate-400 font-medium">You haven't sent any reports yet. <br />you have any reports ? <Link className="!text-green-400" to='/complaint'>click</Link></p>
                         </div>
                     )}
                     {complaints.map(comp => (
@@ -378,5 +386,7 @@ export function Dashboard() {
                 </div>
             )}
         </div>
+        <Footer />
+        </>
     );
 }

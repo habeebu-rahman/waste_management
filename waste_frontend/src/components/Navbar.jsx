@@ -1,7 +1,7 @@
 import { Link, useNavigate,useLocation } from "react-router-dom";
 import { useState } from "react";
 
-export function AppNavbar() {
+export function AppNavbar({setLogRole}) {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
 
@@ -16,6 +16,7 @@ export function AppNavbar() {
         localStorage.clear();
         navigate('/login');
         setIsOpen(false)
+        setLogRole(false)
     };
 
     return (

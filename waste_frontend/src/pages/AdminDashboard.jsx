@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import API from "../api/api";
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { Footer } from "../components/Footer";
+import Swal from "sweetalert2";
 
 export function AdminDashboard() {
     // 1. ADD TAB STATE
@@ -24,22 +26,42 @@ export function AdminDashboard() {
         setSelectedCollectors(prev => ({ ...prev, [id]: collectorId }));
     };
 
-    const assignCollector = async (id, collectorId, type = "request") => {
+    const assignCollector = async (id, collectorId, type = "requests") => {
         if (!collectorId) { alert("Select a collector!"); return; }
-        const endpoint = type === "complaint" ? `waste/complaint/${id}/` : `waste/requests/${id}/`;
+
+        const pathName = type === "complaint" ? "complaint" : "requests";
+        
+        // Ensure the ID is part of the path and ends with a slash
+        const endpoint = `waste/${pathName}/${id}/`; 
+        
         try {
-            await API.patch(endpoint, { collector: collectorId, status: "assigned" });
-            alert("Assigned!");
-            // Update local state so UI refreshes immediately
-            if (type === "request") {
-                setRequest(prev => prev.map(r => r.id === id ? { ...r, status: "assigned" } : r));
+            await API.patch(endpoint, { 
+                collector: parseInt(collectorId), 
+                status: "assigned" 
+            });
+
+            if (type === "requests") {
+                setRequest(prev => prev.map(t => t.id === id ? { ...t, status: 'assigned' } : t));
             } else {
-                setComplaint(prev => prev.map(c => c.id === id ? { ...c, status: "assigned" } : c));
+                setComplaint(prev => prev.map(c => c.id === id ? { ...c, status: 'assigned' } : c));
             }
-        } catch (err) { console.error(err); }
+            Swal.fire({
+                title: 'Assigned',
+                // text: 'Your login is successfully completed',
+                icon: 'success',
+                background:'white',
+                showConfirmButton:true,
+                timer:1000,
+                timerProgressBar:true
+            })
+            // ... state updates
+        } catch (err) { 
+            console.error("Error Response:", err.response?.data); 
+        }
     };
 
     return (
+        <>
         <div className="p-6 max-w-6xl mx-auto min-h-screen">
             <h1 className="text-2xl font-bold mb-6">Admin Management</h1>
 
@@ -87,7 +109,7 @@ export function AdminDashboard() {
                                     </select>
                                 
                                     <button 
-                                        onClick={() => assignCollector(req.id, selectedCollectors[req.id], "request")}
+                                        onClick={() => assignCollector(req.id, selectedCollectors[req.id], "requests")}
                                         className="bg-blue-600 text-white px-4 py-2 !rounded-lg text-sm hover:bg-blue-700"
                                     >
                                         Assign
@@ -146,21 +168,24 @@ export function AdminDashboard() {
 
                                 {/* Right: Assign */}
                                 <div className="flex flex-col justify-center">
-                                    <select 
-                                        className="border rounded p-2 text-sm mb-2"
-                                        onChange={(e) => handleSelectChange(comp.id, e.target.value)}
-                                        value={selectedCollectors[comp.id] || ""}
-                                    >
-                                        <option value="">Select Collector</option>
-                                        {collectors.map(col => <option key={col.id} value={col.id}>{col.username}</option>)}
-                                    </select>
-                                    {comp.status !== 'completed' ? (
+                                    {comp.status !== 'assigned' ? (
+                                    <>
+                                        <select 
+                                            className="border rounded p-2 text-sm mb-2"
+                                            onChange={(e) => handleSelectChange(comp.id, e.target.value)}
+                                            value={selectedCollectors[comp.id] || ""}
+                                        >
+                                            <option value="">Select Collector</option>
+                                            {collectors.map(col => <option key={col.id} value={col.id}>{col.username}</option>)}
+                                        </select>
+                                    
                                         <button 
                                             onClick={() => assignCollector(comp.id, selectedCollectors[comp.id], "complaint")} 
                                             className="mt-3 bg-slate-900 hover:bg-black text-white font-bold py-3 !rounded-2xl transition-all active:scale-95 shadow-xl shadow-slate-200"
                                         >
                                             Assign Collector
                                         </button>
+                                    </>
                                     ) : (
                                         <div className="mt-2 bg-green-50 text-green-700 text-center py-3 rounded-2xl font-black uppercase text-sm border border-green-100">
                                             Assigned
@@ -173,5 +198,7 @@ export function AdminDashboard() {
                 </LoadScript>
             )}
         </div>
+        <Footer />
+        </>
     );
 }

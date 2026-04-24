@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import API from "../api/api";
+import { Footer } from "../components/Footer";
+import Swal from "sweetalert2";
 
 export function RequestPickup() {
     const [categories, setCategories] = useState([]);
@@ -31,7 +33,16 @@ export function RequestPickup() {
 
         try {
             await API.post("waste/requests/", formRequest);
-            alert('🎉 Pickup Request Submitted Successfully!');
+            
+            Swal.fire({
+                title: 'submitted',
+                text: 'Pickup Request Submitted Successfully!',
+                icon: 'success',
+                background:'white',
+                showConfirmButton:true,
+                timer:1000,
+                timerProgressBar:true
+            })
             // Reset form
             setFormRequest({ category: '', preferred_date: ''});
         } catch (err) {
@@ -41,6 +52,7 @@ export function RequestPickup() {
     };
 
     return (
+        <>
         <div className="min-h-screen bg-slate-50 p-6 flex justify-center items-center">
             <div className="bg-white p-8 rounded-3xl shadow-xl max-w-md w-full border border-slate-100">
                 <div className="text-center mb-8">
@@ -99,5 +111,7 @@ export function RequestPickup() {
                 </form>
             </div>
         </div>
+        <Footer />
+        </>
     );
 }

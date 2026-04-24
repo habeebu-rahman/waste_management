@@ -2,6 +2,7 @@ import { useState} from "react";
 import keralaData from "../api/kerala.json";
 import API from "../api/api";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export function Register() {
     const [form, setForm] = useState({
@@ -122,14 +123,23 @@ export function Register() {
         setLoading(true);
         try {
             await API.post("auth/register/", form);
-            alert("Registration Successful!");
-            navigate('/login')
+
+            Swal.fire({
+            title: 'Registration completed',
+            text: 'Your registration is successfully completed, we are stored the data into the database',
+            icon: 'success',
+            background:'white',
+            showConfirmButton:false,
+            timer:1500,
+            timerProgressBar:true
+        })
+        setTimeout(() => {navigate('/login')},2000);
 
         } catch (err) {
             const serverData = err.response?.data;
             // If backend says username exists, map it to the username error state
             if (serverData?.username) {
-                setErrors(prev => ({ ...prev, username: "This username is already taken" }));
+                setErrors(prev => ({ ...prev, username: "This username is already taken try to add _" }));
             } else {
                 setErrors(prev => ({ ...prev, server: "Registration failed. Please check all fields." }));
             }

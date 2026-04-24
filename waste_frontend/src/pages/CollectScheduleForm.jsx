@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import API from "../api/api";
 import keralaData from "../api/kerala.json";
+import { Footer } from "../components/Footer";
+import Swal from "sweetalert2";
+
 
 export function CollectScheduleForm() {
     const [categories, setCategories] = useState([]);
@@ -46,7 +49,17 @@ export function CollectScheduleForm() {
         setLoading(true);
         try {
             await API.post("waste/schedules/", form);
-            alert("New Collection Schedule Published!");
+
+            Swal.fire({
+                title: 'LogIn completed',
+                text: 'Your login is successfully completed',
+                icon: 'success',
+                background:'white',
+                showConfirmButton:true,
+                timer:1500,
+                timerProgressBar:true
+            })
+
             setForm({ date: "", category: "", district: "", panchayath: "", ward: "", collector: "" });
         } catch (err) {
             console.error("Creation failed:", err);
@@ -57,6 +70,7 @@ export function CollectScheduleForm() {
     };
 
     return (
+        <>
         <div className="p-6 max-w-4xl mx-auto min-h-screen">
             <h1 className="text-2xl font-bold mb-6 text-slate-900">Schedule Management</h1>
             
@@ -163,12 +177,14 @@ export function CollectScheduleForm() {
                     <button 
                         type="submit" 
                         disabled={loading}
-                        className="w-full bg-slate-900 text-white p-4 rounded-xl font-bold text-sm hover:bg-black transition-all shadow-lg active:scale-[0.98] disabled:bg-slate-400"
+                        className="w-full bg-green-800 text-white p-4 !rounded-2xl font-bold text-sm hover:bg-green-700 transition-all shadow-lg active:scale-[0.98] disabled:bg-green-400"
                     >
                         {loading ? "PROCESSING..." : "PUBLISH SCHEDULE"}
                     </button>
                 </form>
             </div>
         </div>
+        <Footer />
+        </>
     );
 }

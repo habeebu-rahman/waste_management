@@ -1,6 +1,7 @@
 import { useState } from "react";
 import API from "../api/api";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export function Login() {
     const [form, setForm] = useState({ username: '', password: '' });
@@ -34,7 +35,18 @@ export function Login() {
             // if (role === 'admin') navigate('/');
             // else if (role === 'collector') navigate('/');
             // else 
-            navigate('/');
+            
+            Swal.fire({
+                title: 'LogIn completed',
+                text: 'Your login is successfully completed',
+                icon: 'success',
+                background:'white',
+                showConfirmButton:false,
+                timer:1500,
+                timerProgressBar:true
+            })
+            setTimeout(() => {navigate('/')},2000);
+
             
         } catch (err) {
             console.error(err);

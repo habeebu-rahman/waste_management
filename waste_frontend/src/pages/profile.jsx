@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import API from "../api/api";
 import keralaData from "../api/kerala.json";
+import { Footer } from "../components/Footer";
 
 export function Profile() {
     const [user, setUser] = useState(null);
@@ -143,8 +144,6 @@ export function Profile() {
 
         setLoading(true);
         try {
-            // CHANGE 1: Use .patch instead of .post
-            // CHANGE 2: Use the 'me' endpoint, not 'register'
             const res = await API.patch("auth/me/", form); 
             
             setUser(res.data); // Update the profile UI with new data
@@ -174,6 +173,7 @@ export function Profile() {
     if (!user) return <div className="p-10 text-center font-bold">Loading Profile...</div>;
 
     return (
+        <>
         <div className="min-h-screen bg-slate-50 p-6 md:p-12">
             <div className="max-w-4xl mx-auto">
                 
@@ -384,5 +384,7 @@ export function Profile() {
                 </div>
             </div>
         </div>
+        <Footer />
+        </>
     );
 }
