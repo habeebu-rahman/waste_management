@@ -136,14 +136,14 @@ export function CollectorDashboard() {
 
                                 {/* Map Column */}
                                 <div className="h-[250px] md:h-full rounded-3xl overflow-hidden border-4 border-slate-50 shadow-inner">
-                                    {/* <GoogleMap 
+                                    <GoogleMap 
                                         center={{ lat: parseFloat(comp.latitude) || 0, lng: parseFloat(comp.longitude) || 0 }} 
                                         zoom={15}
                                         mapContainerStyle={{ height: '100%', width: '100%' }}
                                         options={{ disableDefaultUI: true }}
                                     >
                                         <Marker position={{ lat: parseFloat(comp.latitude) || 0, lng: parseFloat(comp.longitude) || 0 }} />
-                                    </GoogleMap> */}
+                                    </GoogleMap>
                                 </div>
                             </div>
                         ))}

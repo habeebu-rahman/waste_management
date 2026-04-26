@@ -156,14 +156,14 @@ export function AdminDashboard() {
 
                                 {/* Center: Map */}
                                 <div className="h-40 rounded-xl overflow-hidden border">
-                                    {/* <GoogleMap 
+                                    <GoogleMap 
                                         center={{ lat: parseFloat(comp.latitude) || 0, lng: parseFloat(comp.longitude) || 0 }} 
                                         zoom={14}
                                         mapContainerStyle={{ height: '100%', width: '100%' }}
                                         options={{ disableDefaultUI: true }}
                                     >
                                         <Marker position={{ lat: parseFloat(comp.latitude) || 0, lng: parseFloat(comp.longitude) || 0 }} />
-                                    </GoogleMap> */}
+                                    </GoogleMap>
                                 </div>
 
                                 {/* Right: Assign */}

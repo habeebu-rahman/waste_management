@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import API from "../api/api";
 import keralaData from "../api/kerala.json";
 import { Footer } from "../components/Footer";
+import Swal from "sweetalert2";
 
 export function Profile() {
     const [user, setUser] = useState(null);
@@ -107,7 +108,7 @@ export function Profile() {
                 setErrors(prev => ({ ...prev, [type]: "" })); // Clear error on success
             }
         } catch (err) {
-            setErrors(prev => ({ ...prev, [type]: "Invalid OTP code" }));
+            // setErrors(prev => ({ ...prev, [type]: "Invalid OTP code" }));
             console.log(err)
             type === 'email' ? setEmailOtpInvalid(true) : setPhoneOtpInvalid(true);
         }
@@ -130,7 +131,7 @@ export function Profile() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Submit clicked! Current Form State:", form);
+        // console.log("Submit clicked! Current Form State:", form);
 
         if (!isEmailVerified || !isPhoneVerified) {
             setErrors(prev => ({ ...prev, server: "Email and Phone must be verified first" }));
@@ -149,7 +150,16 @@ export function Profile() {
             setUser(res.data); // Update the profile UI with new data
             setForm(res.data); // Update the form state
             setIsEditing(false); 
-            alert("Profile Updated Successfully!");
+            
+            Swal.fire({
+                title: 'Updated',
+                text: 'Profile Updated Successfully!',
+                icon: 'success',
+                background:'white',
+                showConfirmButton:false,
+                timer:1500,
+                timerProgressBar:true
+            })
         } catch (err) {
             console.error("Update Error:", err.response?.data);
             const serverErrors = err.response?.data;
@@ -158,6 +168,7 @@ export function Profile() {
             setLoading(false);
         }
     };
+    // console.log(form)
 
     const inputClass = (fieldName) => `w-full px-4 py-3 rounded-xl border transition-all outline-none focus:ring-2 ${
         errors[fieldName] ? 'border-red-500 focus:ring-red-100 bg-red-50/30' : 'border-slate-200 focus:ring-green-100 focus:border-green-500'
@@ -269,7 +280,7 @@ export function Profile() {
                                             onChange={(e) => setForm({...form, email: e.target.value})}
                                         />
                                         {(!isEmailVerified && isEditing) && (
-                                            <button type="button" onClick={() => sendOtp('email', form.email)} className="mt-1 bg-slate-800 text-white px-4 py-1 !rounded-lg text-sm font-bold hover:bg-slate-700 whitespace-nowrap">
+                                            <button type="button" onClick={() => sendOtp('email', form.email)} className="mt-1 bg-green-700 text-white px-4 py-1 !rounded-lg text-sm font-bold hover:bg-green-800 whitespace-nowrap">
                                                 {emailOtpSent ? "Resend" : "Get OTP"}
                                             </button>
                                         )}
@@ -293,7 +304,7 @@ export function Profile() {
                                             onChange={(e) => setForm({...form, phone: e.target.value})}
                                         />
                                         {(!isPhoneVerified && isEditing) && (
-                                            <button type="button" onClick={() => sendOtp('phone', form.phone)} className="mt-1 bg-slate-800 text-white px-4 py-1 !rounded-lg text-sm font-bold hover:bg-slate-700 whitespace-nowrap">
+                                            <button type="button" onClick={() => sendOtp('phone', form.phone)} className="mt-1 bg-green-700 text-white px-4 py-1 !rounded-lg text-sm font-bold hover:bg-green-800 whitespace-nowrap">
                                                 {phoneOtpSent ? "Resend" : "Get OTP"}
                                             </button>
                                         )}

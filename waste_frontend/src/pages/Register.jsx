@@ -91,7 +91,7 @@ export function Register() {
                 setErrors(prev => ({ ...prev, [type]: "" })); // Clear error on success
             }
         } catch (err) {
-            setErrors(prev => ({ ...prev, [type]: "Invalid OTP code" }));
+            // setErrors(prev => ({ ...prev, [type]: "Invalid OTP code" }));
             console.log(err)
             type === 'email' ? setEmailOtpInvalid(true) : setPhoneOtpInvalid(true);
         }
@@ -133,7 +133,8 @@ export function Register() {
             timer:1500,
             timerProgressBar:true
         })
-        setTimeout(() => {navigate('/login')},2000);
+        setTimeout(() => {navigate('/login')},1500);
+        // window.location.reload();
 
         } catch (err) {
             const serverData = err.response?.data;
@@ -197,7 +198,7 @@ export function Register() {
                                 }} 
                             />
                             {!isEmailVerified && (
-                                <button type="button" onClick={() => sendOtp('email', form.email)} className="bg-slate-800 text-white px-3 !rounded-lg text-sm font-bold hover:bg-slate-700 whitespace-nowrap">
+                                <button type="button" onClick={() => sendOtp('email', form.email)} className="bg-green-700 text-white px-3 !rounded-lg text-sm font-bold hover:bg-green-800 whitespace-nowrap">
                                     {emailOtpSent ? "Resend" : "Get OTP"}
                                 </button>
                             )}
@@ -212,7 +213,7 @@ export function Register() {
                                     value={emailOtp}
                                     onChange={(e) => setEmailOtp(e.target.value)} 
                                 />
-                                <button type="button" onClick={() => verifyOtp('email', emailOtp)} className="bg-green-600 hover:bg-green-500 text-white px-4 !rounded-lg font-bold">
+                                <button type="button" onClick={() => verifyOtp('email', emailOtp)} className="bg-green-700 hover:bg-green-800 text-white px-4 !rounded-lg font-bold">
                                     Verify
                                 </button>
                             </div>
@@ -239,7 +240,7 @@ export function Register() {
                                 }} 
                             />
                             {!isPhoneVerified && (
-                                <button type="button" onClick={() => sendOtp('phone', form.phone)} className="bg-slate-800 text-white px-3 !rounded-lg text-sm font-bold hover:bg-slate-700 whitespace-nowrap">
+                                <button type="button" onClick={() => sendOtp('phone', form.phone)} className="bg-green-700 text-white px-3 !rounded-lg text-sm font-bold hover:bg-green-800 whitespace-nowrap">
                                     {phoneOtpSent ? "Resend" : "Get OTP"}
                                 </button>
                             )}
@@ -254,7 +255,7 @@ export function Register() {
                                     value={phoneOtp}
                                     onChange={(e) => setPhoneOtp(e.target.value)} 
                                 />
-                                <button type="button" onClick={() => verifyOtp('phone', phoneOtp)} className="bg-green-600 hover:bg-green-500 text-white px-4 !rounded-lg font-bold">
+                                <button type="button" onClick={() => verifyOtp('phone', phoneOtp)} className="bg-green-700 hover:bg-green-800 text-white px-4 !rounded-lg font-bold">
                                     Verify
                                 </button>
                             </div>

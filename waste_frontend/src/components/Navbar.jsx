@@ -20,13 +20,13 @@ export function AppNavbar({setLogRole}) {
     };
 
     return (
-        <nav className="bg-gradient-to-r from-green-700 to-blue-950 border-b border-slate-800 px-6 py-4 shadow-2xl">
+        <nav className="bg-gradient-to-r from-green-700 to-blue-950 border-b border-slate-800 px-6 py-4 shadow-2xl group">
             <div className="max-w-7xl mx-auto flex justify-between items-center">
                 
                 {/* 1. BRAND - No underline, custom colors */}
-                <Link to="/" className="flex items-center gap-2 !no-underline group">
-                    <div className="bg-green-500 p-1.5 rounded-lg shadow-lg group-hover:rotate-180 transition-transform duration-[1500ms] ease-in-out">
-                        <span className="text-2xl">♻️</span>
+                <Link to="/" className="flex items-center gap-2 !no-underline ">
+                    <div className=" p-1.5 rounded-lg group-hover:rotate-180 transition-transform duration-[1000ms] ease-in">
+                        <span className="text-3xl">♻️</span>
                     </div>
                     <span className="text-3xl font-black text-white">
                         KL<span className="text-green-500 ">een</span>

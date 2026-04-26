@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import API from '../api/api';
 import { Footer } from '../components/Footer';
 import Swal from "sweetalert2";
+import { useNavigate } from 'react-router-dom';
 
 export function ComplaintRegister() {
     const [location, setLocation] = useState({ lat: 11.2588, lng: 75.7804 });
@@ -11,6 +12,7 @@ export function ComplaintRegister() {
     const [preview, setPreview] = useState(null); // For image preview
 
     const API_KEY = import.meta.env.VITE_GOOGLE_MAP_API_KEY;
+    const navigate = useNavigate()
 
     useEffect(() => {
         API.get('waste/categories/')
@@ -46,10 +48,10 @@ export function ComplaintRegister() {
                 icon: 'success',
                 background:'white',
                 showConfirmButton:true,
-                timer:1000,
+                timer:1500,
                 timerProgressBar:true
             })
-            // Optional: reset form or redirect
+            setTimeout(() => {navigate('/')},1500);
         } catch (err) {
             console.log(err.response?.data);
             alert("Submission failed. Check details.");
@@ -120,7 +122,7 @@ export function ComplaintRegister() {
                         <label className="block text-sm font-black text-slate-400 uppercase tracking-widest mb-2">Tap to Pin Location</label>
                         <div className="rounded-3xl overflow-hidden border-4 border-slate-50 shadow-inner flex-grow h-[300px] md:h-full">
                             <LoadScript googleMapsApiKey={API_KEY}>
-                                {/* <GoogleMap 
+                                <GoogleMap 
                                     center={location} 
                                     zoom={14} 
                                     mapContainerStyle={{ height: '100%', width: '100%' }} 
@@ -128,7 +130,7 @@ export function ComplaintRegister() {
                                     options={{ disableDefaultUI: true }}
                                 >
                                     <Marker position={location} />
-                                </GoogleMap> */}
+                                </GoogleMap>
                             </LoadScript>
                         </div>
                         <button className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-extrabold py-4 !rounded-2xl !shadow-lg !shadow-green-500/40 transition-transform active:scale-95">

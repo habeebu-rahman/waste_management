@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import API from "../api/api";
 import { Footer } from "../components/Footer";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 export function RequestPickup() {
     const [categories, setCategories] = useState([]);
@@ -9,6 +10,8 @@ export function RequestPickup() {
         category: '',
         preferred_date: '',
     });
+
+    const navigate = useNavigate()
 
     const getMinDate = () => {
         const dt = new Date();
@@ -33,16 +36,17 @@ export function RequestPickup() {
 
         try {
             await API.post("waste/requests/", formRequest);
-            
+
             Swal.fire({
                 title: 'submitted',
                 text: 'Pickup Request Submitted Successfully!',
                 icon: 'success',
                 background:'white',
                 showConfirmButton:true,
-                timer:1000,
+                timer:1500,
                 timerProgressBar:true
             })
+            setTimeout(() => {navigate('/')},1500);
             // Reset form
             setFormRequest({ category: '', preferred_date: ''});
         } catch (err) {
